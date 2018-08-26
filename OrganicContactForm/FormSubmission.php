@@ -51,12 +51,9 @@ class FormSubmission {
 
 		$today = date("Y-m-d H:i:s");
 
-		dump($form_data);
-
 		$name           = $form_data->getName();
 		$email          = $form_data->getEmail();
-//		$enquiry        = $form_data->getEnquiry();
-		$enquiry        = null;
+		$enquiry        = $form_data->getEnquiry();
 		$tel            = $form_data->getTel();
 		$form_id = $_POST['form_id'];
 

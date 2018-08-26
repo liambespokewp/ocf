@@ -51,8 +51,6 @@ class FormMarkup {
 		$this->increaseFormCount();
 		$form_ID = $this->getFormCount();
 
-		$error_container = isset( $_SESSION['error_container'][$form_ID] ) ? $_SESSION['error_container'][$form_ID] : false;
-
 		// begin output
 		ob_start(); ?>
 
