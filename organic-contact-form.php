@@ -41,6 +41,7 @@ use OrganicContactForm\FormShortcodes as Shortcodes;
 use OrganicContactForm\FormData as FormData;
 use OrganicContactForm\FormSubmission as Submission;
 use OrganicContactForm\AdminSettingsPage as AdminSettingsPage;
+use OrganicContactForm\AdminDownloadEntries as AdminDownloadEntries;
 
 ////////////////
 /// Global variables
@@ -116,6 +117,7 @@ use OrganicContactForm\AdminSettingsPage as AdminSettingsPage;
 
 		global $ocf_container;
 
+		// add contact form to DB (after validation)
 		if ( isset( $_POST['ocf_submission'] ) && wp_verify_nonce( $_POST['ocf_submission'], 'a893y4ygmvpd9y8n7iku3haexinuyfjeg') ) :
 
 			// make sure all required form data is available in the $_POST request
@@ -148,6 +150,16 @@ use OrganicContactForm\AdminSettingsPage as AdminSettingsPage;
 
 
 		endif;
+
+	});
+
+	add_action('admin_init', function() {
+
+		// Download CSV file
+		if (
+			isset( $_POST['download_entries'] )
+			&& wp_verify_nonce($_POST['download_entries'], '839ytgmhwlcs897tgjhvsbrgyin7kuc' )
+		) new AdminDownloadEntries();
 
 	});
 

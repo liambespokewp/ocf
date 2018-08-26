@@ -18,6 +18,10 @@ class AdminSettingsPage {
 	    $this->table = OCF_TABLE_PREFIX . OCF_TABLE;
 
 		$this->limit = isset( $_GET['limit'] ) && is_numeric( $_GET['limit'] ) ? (int)$_GET['limit'] : 10;
+
+		if ( $this->limit > 250 )
+			$this->limit = 250;
+
 		$this->pagi = isset( $_GET['pagi'] ) && is_numeric( $_GET['pagi'] ) &&  $_GET['pagi'] >= 1 ? (int)$_GET['pagi'] : 1;
 
 		add_action('admin_menu', array( $this, 'plugin_admin_add_page') );
@@ -42,8 +46,9 @@ class AdminSettingsPage {
 
 			<h2>Manage form entries</h2>
 
-			<form class="admin-form__download-entries" method="post" action="<?php echo admin_url('admin.php') ?>">
+			<form target="_blank" class="admin-form__download-entries" method="post" action="<?php echo admin_url('admin.php') ?>">
 				<input class="button button-primary" type="submit" value="Download CSV of all entries">
+                <?php wp_nonce_field('839ytgmhwlcs897tgjhvsbrgyin7kuc', 'download_entries')?>
 			</form>
 
 			<form class="admin-form__actions" method="get" action="<?php echo admin_url('admin.php') ?>">
@@ -113,19 +118,11 @@ class AdminSettingsPage {
 
 			</div>
 
+
+		    <?php  $this->renderPagination(); ?>
+
 		</div><?php
 
-
-	}
-
-	private function getEntries() {
-
-		global $wpdb;
-
-		$table = OCF_TABLE_PREFIX . OCF_TABLE;
-		$query = sprintf( 'SELECT * FROM %s', $table );
-
-		return $wpdb->get_results($query);
 
 	}
 
@@ -153,24 +150,10 @@ class AdminSettingsPage {
     }
 
 	/**
-	 * @param $limit int the number of entries to display on each call
-	 */
-	private function setLimit( $limit ) {
-	    $this->limit = $limit;
-    }
-
-	/**
 	 * @return int
 	 */
 	private function getLimit() {
 	    return $this->limit;
-    }
-
-	/**
-	 * @param $page int the current page number being called on
-	 */
-	private function setCurrentPage( $page ) {
-	    $this->pagi = $page;
     }
 
 	/**
@@ -214,7 +197,6 @@ class AdminSettingsPage {
 	private function renderPagination() {
 
 	    $max_pages = $this->getMaxPages();
-	    $page = $this->getCurrentPage();
 	    $current_page_url = $_SERVER['REQUEST_URI'];
 	    $current_page =  isset( $_GET['pagi'] ) ? $_GET['pagi'] : 1;
 
