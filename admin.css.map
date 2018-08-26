@@ -1,0 +1,7 @@
+{
+"version": 3,
+"mappings": "AACE,6BAAoB,CAClB,aAAa,CAAE,IAAI,CCFvB,YAAa,CACX,SAAS,CAAE,GAAG,CACd,SAAS,CAAE,KAAK,CAIhB,4BAAwB,CACtB,UAAU,CAAE,MAAM",
+"sources": ["scss/admin/_forms.scss","scss/admin/_tables.scss"],
+"names": [],
+"file": "admin.css"
+}

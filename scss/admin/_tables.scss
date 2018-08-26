@@ -1,0 +1,10 @@
+.admin-table {
+  max-width: 98%;
+  min-width: 800px;
+}
+
+.table {
+  &__responsive-container {
+    overflow-x: scroll;
+  }
+}

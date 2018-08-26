@@ -1,7 +1,7 @@
 {
 "version": 3,
 "mappings": "AAII,sBAAa,CACX,UAAU,CAAE,KAAK,CCJrB,cAAQ,CACN,KAAK,CAAE,OAAO,CACd,SAAS,CAAE,KAAK,CAKlB,kCACS,CACP,aAAa,CAAE,MAAM",
-"sources": ["scss/_layout.scss","scss/_messages.scss"],
+"sources": ["scss/public/_layout.scss","scss/public/_messages.scss"],
 "names": [],
 "file": "style.css"
 }

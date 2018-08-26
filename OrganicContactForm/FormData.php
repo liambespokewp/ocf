@@ -53,8 +53,11 @@ class FormData {
 				$this->setEnquiry( $form_data['ocf_enquiry_' . $form_ID] );
 
 			// set the form ref page
-			if ( isset( $_SERVER["HTTP_REFERER"] ) && !empty( $_SERVER["HTTP_REFERER"] ) )
-				$this->setRefPage( $_SERVER["HTTP_REFERER"] );
+			if ( isset( $_SERVER["HTTP_REFERER"] ) && !empty( $_SERVER["HTTP_REFERER"] ) ) :
+				// remove the get vars from the URL!
+				$purged_url = strtok( $_SERVER["HTTP_REFERER"], '?');
+				$this->setRefPage( $purged_url );
+			endif;
 
 		endif;
 

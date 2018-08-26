@@ -40,6 +40,7 @@ use OrganicContactForm\FormGlobalContainer as Container;
 use OrganicContactForm\FormShortcodes as Shortcodes;
 use OrganicContactForm\FormData as FormData;
 use OrganicContactForm\FormSubmission as Submission;
+use OrganicContactForm\AdminSettingsPage as AdminSettingsPage;
 
 ////////////////
 /// Global variables
@@ -85,6 +86,21 @@ use OrganicContactForm\FormSubmission as Submission;
 			);
 			wp_localize_script( 'ocf_scripts', 'ajax_attributes', $ajax_vars );
 			wp_enqueue_script( 'ocf_scripts' );
+
+		}
+
+	endif;
+
+	if ( !function_exists('ocf_load_plugin_admin_scripts' ) ) :
+
+		/**
+		 * Load the scripts required in the plugin
+		 */
+		add_action( 'admin_enqueue_scripts', 'ocf_load_plugin_admin_scripts' );
+		function ocf_load_plugin_admin_scripts() {
+
+			$plugin_url = forward_slash_it( plugin_dir_url( __FILE__ ) );
+			wp_enqueue_style('admin-styles', $plugin_url . 'admin.css');
 
 		}
 
@@ -137,7 +153,7 @@ use OrganicContactForm\FormSubmission as Submission;
 
 
 ///////////////
-/// Widgets
+/// Error message function
 ///////////////
 
 	if ( !function_exists('render_error_message') ) :
@@ -155,6 +171,11 @@ use OrganicContactForm\FormSubmission as Submission;
 
 	endif;
 
+
+///////////////
+/// Settings pages
+///////////////
+new AdminSettingsPage();
 
 ///////////////
 /// Widgets
