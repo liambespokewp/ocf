@@ -69,7 +69,7 @@ class FormData {
 	/**
 	 * @param string $name
 	 */
-	private function setName( $name ): void {
+	private function setName( $name ) {
 		// handle validation here
 		$this->name = sanitize_text_field( $name );
 	}
@@ -84,7 +84,7 @@ class FormData {
 	/**
 	 * @param string $email
 	 */
-	private function setEmail( $email ): void {
+	private function setEmail( $email ) {
 		$this->email = sanitize_email( $email );
 	}
 
@@ -98,7 +98,7 @@ class FormData {
 	/**
 	 * @param string $tel
 	 */
-	private function setTel( $tel ): void {
+	private function setTel( $tel ) {
 		$this->tel = sanitize_text_field( $tel );
 	}
 
@@ -112,7 +112,7 @@ class FormData {
 	/**
 	 * @param string $enquiry
 	 */
-	private function setEnquiry( $enquiry ): void {
+	private function setEnquiry( $enquiry ) {
 		$this->enquiry = sanitize_textarea_field( $enquiry );
 	}
 
@@ -126,7 +126,7 @@ class FormData {
 	/**
 	 * @param string $ref_page
 	 */
-	private function setRefPage( $ref_page ): void {
+	private function setRefPage( $ref_page ) {
 		$this->ref_page = $ref_page;
 	}
 
