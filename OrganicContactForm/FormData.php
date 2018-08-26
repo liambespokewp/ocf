@@ -32,23 +32,25 @@ class FormData {
 	 */
 	public function __construct( $form_data ) {
 
-		if ( is_array( $form_data ) ) :
+		if ( is_array( $form_data ) && isset( $form_data['form_id'] ) ) :
+			
+			$form_ID = $form_data['form_id'];
 
 			// name of enquirer
-			if ( isset( $form_data['ocf_name'] ) && !empty( $form_data['ocf_name'] ) )
-				$this->setName( $form_data['ocf_name'] );
+			if ( isset( $form_data['ocf_name_' . $form_ID ] ) && !empty( $form_data['ocf_name_' . $form_ID ] ) )
+				$this->setName( $form_data['ocf_name_' . $form_ID ] );
 
 			// email of enquirer
-			if ( isset( $form_data['ocf_email'] ) && !empty( $form_data['ocf_email'] ) )
-				$this->setEmail( $form_data['ocf_email'] );
+			if ( isset( $form_data['ocf_email_' . $form_ID] ) && !empty( $form_data['ocf_email_' . $form_ID] ) )
+				$this->setEmail( $form_data['ocf_email_' . $form_ID] );
 
 			// phone number of enquirer
-			if ( isset( $form_data['ocf_tel'] ) )
-				$this->setTel( $form_data['ocf_tel'] );
+			if ( isset( $form_data['ocf_tel_' . $form_ID] ) )
+				$this->setTel( $form_data['ocf_tel_' . $form_ID] );
 
 			// message from enquirer
-			if ( isset( $form_data['ocf_enquiry'] ) && !empty( $form_data['ocf_enquiry'] ) )
-				$this->setEnquiry( $form_data['ocf_enquiry'] );
+			if ( isset( $form_data['ocf_enquiry_' . $form_ID] ) && !empty( $form_data['ocf_enquiry_' . $form_ID] ) )
+				$this->setEnquiry( $form_data['ocf_enquiry_' . $form_ID] );
 
 			// set the form ref page
 			if ( isset( $_SERVER["HTTP_REFERER"] ) && !empty( $_SERVER["HTTP_REFERER"] ) )

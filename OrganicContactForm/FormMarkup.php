@@ -51,30 +51,32 @@ class FormMarkup {
 		$this->increaseFormCount();
 		$form_ID = $this->getFormCount();
 
+		$error_container = isset( $_SESSION['error_container'][$form_ID] ) ? $_SESSION['error_container'][$form_ID] : false;
+
 		// begin output
 		ob_start(); ?>
 
-		<form method="post">
+		<form method="post" class="ocf-form">
 
 			<div class="container">
 
                 <!-- start name field-->
 				<div class="row">
                     <div class="col-md-4">
-                        <label for="ocf_name_<?php echo $form_ID; ?>">Name</label>
+                        <label for="ocf_name_<?php echo $form_ID; ?>">Name<?php render_error_message('name', $form_ID); ?></label>
                     </div>
                     <div class="col-md-8">
-                        <input name="ocf_name" id="ocf_name_<?php echo $form_ID; ?>" type="text" required>
+                        <input name="ocf_name_<?php echo $form_ID; ?>" id="ocf_name_<?php echo $form_ID; ?>" type="text" required>
                     </div>
                 </div>
 
                 <!-- start email field-->
 				<div class="row">
                     <div class="col-md-4">
-                        <label for="ocf_email_<?php echo $form_ID; ?>">Email</label>
+                        <label for="ocf_email_<?php echo $form_ID; ?>">Email<?php render_error_message('email', $form_ID); ?></label>
                     </div>
                     <div class="col-md-8">
-                        <input name="ocf_email" id="ocf_email_<?php echo $form_ID; ?>" type="email" required>
+                        <input name="ocf_email_<?php echo $form_ID; ?>" id="ocf_email_<?php echo $form_ID; ?>" type="email" required>
                     </div>
                 </div>
 
@@ -84,17 +86,17 @@ class FormMarkup {
                         <label for="ocf_tel_<?php echo $form_ID; ?>">Tel.</label>
                     </div>
                     <div class="col-md-8">
-                        <input name="ocf_tel" id="ocf_tel_<?php echo $form_ID; ?>" type="number">
+                        <input name="ocf_tel_<?php echo $form_ID; ?>" id="ocf_tel_<?php echo $form_ID; ?>" type="text">
                     </div>
                 </div>
 
                 <!-- start enquiry field-->
 				<div class="row">
                     <div class="col-md-4">
-                        <label for="ocf_enquiry_<?php echo $form_ID; ?>">Enquiry.</label>
+                        <label for="ocf_enquiry_<?php echo $form_ID; ?>">Enquiry.<?php render_error_message('enquiry', $form_ID); ?></label>
                     </div>
                     <div class="col-md-8">
-                        <textarea name="ocf_enquiry" id="ocf_enquiry_<?php echo $form_ID; ?>" required></textarea>
+                        <textarea name="ocf_enquiry_<?php echo $form_ID; ?>" id="ocf_enquiry_<?php echo $form_ID; ?>" required></textarea>
                     </div>
                 </div>
 
@@ -111,6 +113,7 @@ class FormMarkup {
 			</div>
 
             <?php wp_nonce_field('a893y4ygmvpd9y8n7iku3haexinuyfjeg', 'ocf_submission'); ?>
+            <input type="hidden" name="form_id" value="<?php echo $this->getFormCount(); ?>">
 
 		</form><?php
 

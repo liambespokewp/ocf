@@ -1,0 +1,13 @@
+.message {
+  &-error {
+    color: #ff2827;
+    font-size: 0.9em;
+  }
+}
+
+.ocf-form {
+  input,
+  textarea {
+    margin-bottom: 0.6rem;
+  }
+}

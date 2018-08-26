@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) or die;
 
 /** the prefix that is applied to any generated table */
 define('OCF_TABLE_PREFIX', 'ocf_');
-define('OCF_TABLE', 'contact_enteries');
+define('OCF_TABLE', 'contact_entries');
 
 ////////////////
 /// Autoloader
@@ -52,6 +52,11 @@ use OrganicContactForm\FormSubmission as Submission;
 	 * @var Shortcodes $shortcodes
 	 */
 	$shortcodes = new Shortcodes();
+
+	if (session_status() == PHP_SESSION_NONE)
+		session_start();
+
+	$_SESSION['error_container'];
 
 
 ////////////////
@@ -99,9 +104,12 @@ use OrganicContactForm\FormSubmission as Submission;
 
 			// make sure all required form data is available in the $_POST request
 			if (
-				!isset( $_POST['ocf_name'] )
-				|| !isset( $_POST['ocf_email'] )
-				|| !isset( $_POST['ocf_enquiry'] )
+				(
+					!isset( $_POST['ocf_name'] )
+					|| !isset( $_POST['ocf_email'] )
+					|| !isset( $_POST['ocf_enquiry'] )
+				)
+				&& $_SERVER['REQUEST_METHOD'] !== 'POST'
 			) return false;
 
 			$ocf_container->setFormData( $_POST );
@@ -126,6 +134,26 @@ use OrganicContactForm\FormSubmission as Submission;
 		endif;
 
 	});
+
+
+///////////////
+/// Widgets
+///////////////
+
+	if ( !function_exists('render_error_message') ) :
+
+		function render_error_message( $field, $form_ID ) {
+
+
+			if (
+				isset( $_SESSION['error_container'][$form_ID][$field] )
+	            && $_SERVER['REQUEST_METHOD'] === 'POST'
+			) :
+				echo '<br><span class="message-error"> ' .  $_SESSION['error_container'][$form_ID][$field] .'</span>';
+			endif;
+		}
+
+	endif;
 
 
 ///////////////
@@ -169,10 +197,11 @@ if ( !function_exists('ocf_create_database') ) :
 			DB_NAME
 		);
 
+		$table = OCF_TABLE_PREFIX . OCF_TABLE;
 
 		// Handles the core contact form data
 		$queries[] = sprintf('
-	                    CREATE TABLE IF NOT EXISTS `%s`.`%scontact_enteries`
+	                    CREATE TABLE IF NOT EXISTS `%s`.`%s`
 	                        (
 	                            `id_contact_entries` INT NOT NULL AUTO_INCREMENT,
 	                            `name` VARCHAR(100) NOT NULL,
@@ -185,7 +214,7 @@ if ( !function_exists('ocf_create_database') ) :
 	                        )
 	                    ENGINE = InnoDB CHARSET=utf8 COLLATE utf8_general_ci;',
 			DB_NAME,
-			OCF_TABLE_PREFIX
+			$table
 		);
 
 		// Fire off each query, one by one
@@ -225,3 +254,10 @@ endif;
 		}
 
 	endif;
+
+
+	// remove error messages after they have beed presented on the frontend
+	add_action('shutdown', function() {
+		if ( isset( $_SESSION['error_container'] )  )
+			unset( $_SESSION['error_container'] );
+	});
