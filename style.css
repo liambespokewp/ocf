@@ -1,2 +1,2 @@
-.ocf-submit__container{text-align:right}.message-error{color:#ff2827;font-size:0.9em}.ocf-form input,.ocf-form textarea{margin-bottom:0.6rem}
+.ocf-submit__container{text-align:right}.message-error{color:#ff2827;font-size:0.9em}.ocf-form input,.ocf-form textarea{margin-bottom:0.6rem}.ocf-form input:disabled,.ocf-form textarea:disabled{background:#ededed}input[type="submit"]:disabled{cursor:not-allowed}input[type="submit"].submitted{background:green}input[type="submit"].failed-submission{background:#ff2827}input[type="submit"].failed-submission:disabled{background:#ff8e8b}
 /*# sourceMappingURL=style.css.map */

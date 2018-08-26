@@ -54,7 +54,7 @@ class FormMarkup {
 		// begin output
 		ob_start(); ?>
 
-		<form method="post" class="ocf-form">
+		<form method="post" class="ocf-form ajax-target">
 
 			<div class="container">
 
@@ -64,7 +64,7 @@ class FormMarkup {
                         <label for="ocf_name_<?php echo $form_ID; ?>">Name<?php render_error_message('name', $form_ID); ?></label>
                     </div>
                     <div class="col-md-8">
-                        <input name="ocf_name_<?php echo $form_ID; ?>" id="ocf_name_<?php echo $form_ID; ?>" type="text" required>
+                        <input name="ocf_name_<?php echo $form_ID; ?>" id="ocf_name_<?php echo $form_ID; ?>" type="text" class="ajax-validation" required>
                     </div>
                 </div>
 
@@ -74,7 +74,7 @@ class FormMarkup {
                         <label for="ocf_email_<?php echo $form_ID; ?>">Email<?php render_error_message('email', $form_ID); ?></label>
                     </div>
                     <div class="col-md-8">
-                        <input name="ocf_email_<?php echo $form_ID; ?>" id="ocf_email_<?php echo $form_ID; ?>" type="email" required>
+                        <input name="ocf_email_<?php echo $form_ID; ?>" id="ocf_email_<?php echo $form_ID; ?>" type="email" class="ajax-validation" required>
                     </div>
                 </div>
 
@@ -94,14 +94,14 @@ class FormMarkup {
                         <label for="ocf_enquiry_<?php echo $form_ID; ?>">Enquiry.<?php render_error_message('enquiry', $form_ID); ?></label>
                     </div>
                     <div class="col-md-8">
-                        <textarea name="ocf_enquiry_<?php echo $form_ID; ?>" id="ocf_enquiry_<?php echo $form_ID; ?>" required></textarea>
+                        <textarea name="ocf_enquiry_<?php echo $form_ID; ?>" id="ocf_enquiry_<?php echo $form_ID; ?>" class="ajax-validation" required></textarea>
                     </div>
                 </div>
 
                 <!--  start ajax spinner container/submission field -->
 				<div class="row ocf-submit__container">
                     <div class="col-md-4">
-                        <span class="ocf-ajax-spinner"></span>
+                        <span class="ocf-ajax-message"></span>
                     </div>
                     <div class="col-md-8">
                         <input class="ocf-submit__button ajax-submit" type="submit">

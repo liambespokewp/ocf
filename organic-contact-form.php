@@ -113,45 +113,71 @@ use OrganicContactForm\AdminDownloadEntries as AdminDownloadEntries;
 /// Form handling
 ///////////////
 
-	add_action('init', function() {
 
-		global $ocf_container;
+	if ( !function_exists( 'handleFormSubmission' ) ) :
 
-		// add contact form to DB (after validation)
-		if ( isset( $_POST['ocf_submission'] ) && wp_verify_nonce( $_POST['ocf_submission'], 'a893y4ygmvpd9y8n7iku3haexinuyfjeg') ) :
+		add_action('init', 'handleFormSubmission');
+		add_action('wp_ajax_nopriv_submit_contact_form', 'handleFormSubmission');
+		add_action('wp_ajax_submit_contact_form', 'handleFormSubmission');
 
-			// make sure all required form data is available in the $_POST request
-			if (
-				(
-					!isset( $_POST['ocf_name'] )
-					|| !isset( $_POST['ocf_email'] )
-					|| !isset( $_POST['ocf_enquiry'] )
-				)
-				&& $_SERVER['REQUEST_METHOD'] !== 'POST'
-			) return false;
+		function handleFormSubmission() {
 
-			$ocf_container->setFormData( $_POST );
+			$ajax = false;
 
-			/** @var FormData|bool $form_data */
-			$form_data = $ocf_container->getFormData();
+			// My fault. Bad coding. Moving form data in to the post object when submitted via ajax
+			if ( isset( $_POST['action'] ) && $_POST['action'] === 'submit_contact_form' ) :
+				$form_data = $_POST['form'];
+				$params = array();
+				parse_str($form_data, $params);
+				$_POST = $params;
+				$ajax = true;
 
-			// make sure the object instantiated
-			if ( $form_data === false )
-				return false;
-
-			$submit_form = new Submission( $form_data );
-
-			if ( $submit_form ) :
-				// form was saved to DB
-			else :
-				// form failed to save to DB
 			endif;
 
+			global $ocf_container;
 
+			// add contact form to DB (after validation)
+			if (
+				isset( $_POST['ocf_submission'] )
+				&& wp_verify_nonce( $_POST['ocf_submission'], 'a893y4ygmvpd9y8n7iku3haexinuyfjeg')
+			) :
 
-		endif;
+				// make sure all required form data is available in the $_POST request
+				if (
+					(
+						!isset( $_POST['ocf_name'] )
+						|| !isset( $_POST['ocf_email'] )
+						|| !isset( $_POST['ocf_enquiry'] )
+					)
+					&& $_SERVER['REQUEST_METHOD'] !== 'POST'
+				) return false;
 
-	});
+				$ocf_container->setFormData( $_POST );
+
+				/** @var FormData|bool $form_data */
+				$form_data = $ocf_container->getFormData();
+
+				// make sure the object instantiated
+				if ( $form_data === false )
+					return false;
+
+				$submit_form = new Submission( $form_data );
+
+				if ( $submit_form && $ajax ) :
+					// form saved to DB
+					echo json_encode( array( 'saved' => true ) );
+					die;
+				else :
+					// form failed to save to DB
+					echo json_encode( array( 'saved' => true ) );
+					die;
+				endif;
+
+			endif;
+
+		}
+
+	endif;
 
 	add_action('admin_init', function() {
 

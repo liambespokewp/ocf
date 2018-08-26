@@ -9,5 +9,28 @@
   input,
   textarea {
     margin-bottom: 0.6rem;
+    &:disabled {
+      background: #ededed;
+    }
   }
 }
+
+input[type="submit"] {
+
+  &:disabled {
+    cursor: not-allowed;
+  }
+
+  &.submitted {
+    background: green;
+
+  }
+  &.failed-submission {
+    background: #ff2827;
+
+    &:disabled {
+      background: #ff8e8b;
+    }
+  }
+}
+
