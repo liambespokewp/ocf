@@ -8,11 +8,13 @@ Author: Liam Maclachlan
 Author URI: https://www.linkedin.com/in/devlime/
 */
 
+defined( 'ABSPATH' ) or die;
+
 /** the prefix that is applied to any generated table */
 define('OCF_TABLE_PREFIX', 'ocf_');
 
 ////////////////
-// Autoloader
+/// Autoloader
 ////////////////
 
 spl_autoload_register(function ($class) {
@@ -32,6 +34,60 @@ spl_autoload_register(function ($class) {
 });
 
 
+// instances must be called after the autoloader script.
+use OrganicContactForm\FormGlobalContainer as Container;
+use \OrganicContactForm\FormShortcodes as Shortcodes;
+
+////////////////
+/// Global variables
+////////////////
+	/** @var Container $ocf_container */
+	$ocf_container = new Container();
+
+	/**
+	 * allow access to the required shortcodes
+	 * @var Shortcodes $shortcodes
+	 */
+	$shortcodes = new Shortcodes();
+
+
+///////////////
+/// Widgets
+///////////////
+
+	if ( !function_exists('register_ocf_widget') ) :
+
+		/**
+		 * Create widget
+		 * @see \OrganicContactForm\FormWidget
+		 */
+		add_action( 'widgets_init', 'register_ocf_widget' );
+		function register_ocf_widget() {
+			register_widget( 'OrganicContactForm\FormWidget' );
+		}
+
+	endif;
+
+////////////////
+/// Stylesheets
+////////////////
+
+	if ( !function_exists('ocf_load_plugin_scripts' ) ) :
+
+		/**
+		 * Load the scrits required in the plugin
+		 */
+		add_action( 'wp_enqueue_scripts', 'ocf_load_plugin_scripts' );
+		function ocf_load_plugin_scripts() {
+
+			$plugin_url = plugin_dir_url( __FILE__ );
+
+			wp_enqueue_style( 'bootstrap', $plugin_url . 'node_modules/bootstrap/dist/css/bootstrap.min.css' );
+
+		}
+
+	endif;
+
 ////////////////
 /// Activation
 ////////////////
@@ -47,8 +103,8 @@ if ( !function_exists('ocf_create_database') ) :
 		// grab to run the SQL queries
 		global $wpdb;
 
+		// prepare the queries array that needs to be looped to run all the queries individually
 		$queries = array();
-
 
 		// make sure the right table will be used in the plugin initialisation
 		$queries[] = sprintf(
@@ -57,6 +113,7 @@ if ( !function_exists('ocf_create_database') ) :
 		);
 
 
+		// Handles the core contact form data
 		$queries[] = sprintf('
 	                    CREATE TABLE IF NOT EXISTS `%s`.`%scontact_enteries`
 	                        (
@@ -74,6 +131,7 @@ if ( !function_exists('ocf_create_database') ) :
 			OCF_TABLE_PREFIX
 		);
 
+		// Fire off each query, one by one
 		foreach ( $queries as $query )
 			$wpdb->query( $query );
 
