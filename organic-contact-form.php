@@ -2,7 +2,7 @@
 
 /*
 Plugin Name: Organic Contact Form
-Description: A brief description of the Plugin.
+Description: A simple contact form plugin.
 Version: 1.0
 Author: Liam Maclachlan
 Author URI: https://www.linkedin.com/in/devlime/
@@ -36,7 +36,7 @@ spl_autoload_register(function ($class) {
 
 // instances must be called after the autoloader script.
 use OrganicContactForm\FormGlobalContainer as Container;
-use \OrganicContactForm\FormShortcodes as Shortcodes;
+use OrganicContactForm\FormShortcodes as Shortcodes;
 
 ////////////////
 /// Global variables
@@ -59,7 +59,7 @@ use \OrganicContactForm\FormShortcodes as Shortcodes;
 
 		/**
 		 * Create widget
-		 * @see \OrganicContactForm\FormWidget
+		 * @see OrganicContactForm\FormWidget
 		 */
 		add_action( 'widgets_init', 'register_ocf_widget' );
 		function register_ocf_widget() {
@@ -69,20 +69,24 @@ use \OrganicContactForm\FormShortcodes as Shortcodes;
 	endif;
 
 ////////////////
-/// Stylesheets
+/// Stylesheets and scripts
 ////////////////
 
 	if ( !function_exists('ocf_load_plugin_scripts' ) ) :
 
 		/**
-		 * Load the scrits required in the plugin
+		 * Load the scripts required in the plugin
 		 */
 		add_action( 'wp_enqueue_scripts', 'ocf_load_plugin_scripts' );
 		function ocf_load_plugin_scripts() {
 
-			$plugin_url = plugin_dir_url( __FILE__ );
+			$plugin_url = forward_slash_it( plugin_dir_url( __FILE__ ) );
 
 			wp_enqueue_style( 'bootstrap', $plugin_url . 'node_modules/bootstrap/dist/css/bootstrap.min.css' );
+
+			wp_enqueue_style( 'ocf_styles', $plugin_url . 'style.css' );
+
+			wp_enqueue_script( 'ocf_scripts', $plugin_url . 'scripts.js', array('jquery'), false, true );
 
 		}
 
@@ -138,3 +142,33 @@ if ( !function_exists('ocf_create_database') ) :
 	}
 
 endif;
+
+
+////////////////
+/// Utility functions
+////////////////
+	if ( !function_exists('forward_slash_it') ) :
+
+		/**
+		 * Add a trailing slash on to the end of a string
+		 * @param string $string
+		 *
+		 * @return string;
+		 */
+		function forward_slash_it( $string ) {
+			return  rtrim( $string, '/') . '/';
+		}
+
+	endif;
+
+	if ( !function_exists('dump') ) :
+
+		/**
+		 * Echo out a variable within pre tags. Useful for arrays and objects
+		 * @param $var mixed
+		 */
+		function dump( $var ) {
+			echo '<pre>' . print_r( $var, true ) . '</pre>';
+		}
+
+	endif;

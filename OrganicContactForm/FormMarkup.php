@@ -60,51 +60,57 @@ class FormMarkup {
 
                 <!-- start name field-->
 				<div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <label for="ocf_name_<?php echo $form_ID; ?>">Name</label>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-8">
                         <input name="ocf_name" id="ocf_name_<?php echo $form_ID; ?>" type="text">
                     </div>
                 </div>
 
                 <!-- start email field-->
 				<div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <label for="ocf_email_<?php echo $form_ID; ?>">Email</label>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-8">
                         <input name="ocf_email" id="ocf_email_<?php echo $form_ID; ?>" type="email">
                     </div>
                 </div>
 
                 <!-- start tel field-->
 				<div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <label for="ocf_tel_<?php echo $form_ID; ?>">Tel.</label>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-8">
                         <input name="ocf_tel" id="ocf_tel_<?php echo $form_ID; ?>" type="tel">
                     </div>
                 </div>
 
-                <!-- start tel field-->
+                <!-- start enquiry field-->
 				<div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <label for="ocf_enquiry_<?php echo $form_ID; ?>">Enquiry.</label>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-8">
                         <textarea name="ocf_enquiry" id="ocf_enquiry_<?php echo $form_ID; ?>"></textarea>
                     </div>
                 </div>
 
-				<div class="row">
-                    <div class="offset-6 col-md-6">
-                        <input type="submit">
+                <!--  start ajax spinner container/submission field -->
+				<div class="row ocf-submit__container">
+                    <div class="col-md-4">
+                        <span class="ocf-ajax-spinner"></span>
+                    </div>
+                    <div class="col-md-8">
+                        <input class="ocf-submit__button" type="submit">
                     </div>
                 </div>
 
 			</div>
+
+            <?php wp_nonce_field('a893y4ygmvpd9y8n7iku3haexinuyfjeg', 'ocf_submission'); ?>
 
 		</form><?php
 
