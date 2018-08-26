@@ -11,7 +11,14 @@ namespace OrganicContactForm;
 
 class AdminSettingsPage {
 
+    private $maxPages, $limit, $table, $pagi;
+
 	public function __construct() {
+
+	    $this->table = OCF_TABLE_PREFIX . OCF_TABLE;
+
+		$this->limit = isset( $_GET['limit'] ) && is_numeric( $_GET['limit'] ) ? (int)$_GET['limit'] : 10;
+		$this->pagi = isset( $_GET['pagi'] ) && is_numeric( $_GET['pagi'] ) &&  $_GET['pagi'] >= 1 ? (int)$_GET['pagi'] : 1;
 
 		add_action('admin_menu', array( $this, 'plugin_admin_add_page') );
 
@@ -35,9 +42,24 @@ class AdminSettingsPage {
 
 			<h2>Manage form entries</h2>
 
-			<form class="admin-form__download-entries" method="post">
-				<input class="button button-primary" type="submit" value="Download CSV of entries">
+			<form class="admin-form__download-entries" method="post" action="<?php echo admin_url('admin.php') ?>">
+				<input class="button button-primary" type="submit" value="Download CSV of all entries">
 			</form>
+
+			<form class="admin-form__actions" method="get" action="<?php echo admin_url('admin.php') ?>">
+                <label for="limit">Show per page:</label>
+				<select name="limit" id="limit">
+                    <option value="10" <?php if ( isset( $_GET['limit'] ) && $_GET['limit'] == '10' ) echo ' selected' ;?>>10</option>
+                    <option value="25" <?php if ( isset( $_GET['limit'] ) && $_GET['limit'] == '25' ) echo ' selected' ;?>>25</option>
+                    <option value="50" <?php if ( isset( $_GET['limit'] ) && $_GET['limit'] == '50' ) echo ' selected' ;?>>50</option>
+                    <option value="100" <?php if ( isset( $_GET['limit'] ) && $_GET['limit'] == '100' ) echo ' selected' ;?>>100</option>
+                    <option value="250" <?php if ( isset( $_GET['limit'] ) && $_GET['limit'] == '250' ) echo ' selected' ;?>>250</option>
+                </select>
+                <input class="button" type="submit" value="Apply filter">
+                <input type="hidden" name="page" value="ocf_entries">
+			</form>
+
+            <?php  $this->renderPagination(); ?>
 
 			<div class="table__responsive-container">
 				<table class="widefat fixed striped posts admin-table table-responsive">
@@ -55,8 +77,7 @@ class AdminSettingsPage {
 
 					<tbody>
 
-						<?php $entries = $this->getEntries(); ?>
-						<?php $date_format = get_option( 'date_format' ); ?>
+						<?php $entries = $this->getPaginatedEntries(); ?>
 
 						<?php foreach ( $entries as $entry ) : ?>
 
@@ -108,11 +129,123 @@ class AdminSettingsPage {
 
 	}
 
+	/**
+     * Get the max availble pages with the current limi
+     *
+	 * @return float
+	 */
+	private function getMaxPages() {
+
+	    global $wpdb;
+
+	    if ( isset($this->maxPages) || is_null( $this->maxPages ) ) :
+
+		    $table = $this->getTable();
+            $limit = $this->getLimit();
+
+		    $max_pages_query = sprintf('SELECT `id_contact_entries` FROM %s', $table );
+		    $this->maxPages = ceil($wpdb->query($max_pages_query)/$limit);
+        endif;
+
+        return $this->maxPages;
+
+
+    }
+
+	/**
+	 * @param $limit int the number of entries to display on each call
+	 */
+	private function setLimit( $limit ) {
+	    $this->limit = $limit;
+    }
+
+	/**
+	 * @return int
+	 */
+	private function getLimit() {
+	    return $this->limit;
+    }
+
+	/**
+	 * @param $page int the current page number being called on
+	 */
+	private function setCurrentPage( $page ) {
+	    $this->pagi = $page;
+    }
+
+	/**
+	 * @return int
+	 */
+	private function getCurrentPage() {
+	    return $this->pagi;
+    }
+
+	/**
+	 * @return string
+	 */
+	private function getTable() {
+	    return $this->table;
+    }
+
 	private function getPaginatedEntries() {
 
+		global $wpdb;
 
+		$table = $this->getTable();
+		$limit = $this->getLimit();
+		$page = $this->getCurrentPage();
+		$max_pages = $this->getMaxPages();
+
+		// make sure the offset doesn't overshoot what is possible
+		if ( $page > $max_pages )
+		    $page = $max_pages;
+
+		$offset = ($limit * $page) - $limit;
+		$query = sprintf( 'SELECT * FROM %s ORDER BY `id_contact_entries` ASC LIMIT %d OFFSET %d', $table, $limit, $offset);
+
+		return $wpdb->get_results($query);
 
 	}
+
+
+	/**
+	 * Create the full output for the Pagination links
+	 */
+	private function renderPagination() {
+
+	    $max_pages = $this->getMaxPages();
+	    $page = $this->getCurrentPage();
+	    $current_page_url = $_SERVER['REQUEST_URI'];
+	    $current_page =  isset( $_GET['pagi'] ) ? $_GET['pagi'] : 1;
+
+	    if ( isset( $_GET['pagi'] ) )
+		    $current_page_url = remove_query_arg('pagi', $current_page_url );
+
+	    $i = 1;
+
+	    if ( $max_pages > 1 ) : ?>
+
+            <ul class="tablenav-pages ocf-tablenav-pages">
+                <?php while ( $i <= $max_pages ) :
+
+                    $pagi_url = add_query_arg( 'pagi', $i, $current_page_url );
+
+
+	                if ( $current_page == $i ) : ?>
+                        <li class="current-pagi"><?php echo $i; ?></li><?php
+                    else : ?>
+                        <li><a href="<?php echo $pagi_url; ?>"><?php echo $i; ?></a></li><?php
+                    endif;
+
+                    $i++;
+
+                endwhile; ?>
+            </ul>
+
+
+        <?php endif;
+
+    }
 
 
 

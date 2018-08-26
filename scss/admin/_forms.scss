@@ -1,5 +1,33 @@
 .admin-form {
-  &__download-entries {
-    margin-bottom: 1rem;
+   &__download-entries {
+     margin-bottom: 1rem;
+   }
+ }
+
+.ocf-tablenav-pages {
+
+  text-align: right;
+  padding-right: 2%;
+
+  li {
+    color: #008ec2;
+    display: inline-block;
+    background: white;
+    border-radius: 2px;
+    border: 1px solid #008ec2;
+    text-align: center;
+
+    a {
+      color: 008#ec2;
+      display: block;
+      padding: 0.4rem 0.6rem;
+    }
+
+    &.current-pagi {
+      background: #008ec2;
+      color: white;
+      padding: 0.4rem 0.6rem;
+    }
   }
+
 }
