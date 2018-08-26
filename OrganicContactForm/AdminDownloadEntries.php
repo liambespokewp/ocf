@@ -13,6 +13,13 @@ class AdminDownloadEntries {
 
 	public function __construct() {
 		$entries = $this->getEntries();
+
+		// Fallback. Kills browser tab if no entries exist.
+		if ( empty( $entries ) ) :
+			echo "<script>window.close();</script>";
+			die;
+		endif;
+
 		$this->arrayToCSV($entries);
 	}
 
