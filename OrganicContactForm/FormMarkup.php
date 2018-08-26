@@ -21,15 +21,15 @@ class FormMarkup {
 	/**
 	 * @return int
 	 */
-	public function getFormCount(): int {
+	public function getFormCount() {
 		return $this->form_count;
 	}
 
 	/**
 	 * @param int $form_count
 	 */
-	public function setFormCount( int $form_count ): void {
-		$this->form_count = $form_count;
+	public function setFormCount( $form_count ) {
+		$this->form_count = (int)$form_count;
 	}
 
 	/**
@@ -64,7 +64,7 @@ class FormMarkup {
                         <label for="ocf_name_<?php echo $form_ID; ?>">Name</label>
                     </div>
                     <div class="col-md-8">
-                        <input name="ocf_name" id="ocf_name_<?php echo $form_ID; ?>" type="text">
+                        <input name="ocf_name" id="ocf_name_<?php echo $form_ID; ?>" type="text" required>
                     </div>
                 </div>
 
@@ -74,7 +74,7 @@ class FormMarkup {
                         <label for="ocf_email_<?php echo $form_ID; ?>">Email</label>
                     </div>
                     <div class="col-md-8">
-                        <input name="ocf_email" id="ocf_email_<?php echo $form_ID; ?>" type="email">
+                        <input name="ocf_email" id="ocf_email_<?php echo $form_ID; ?>" type="email" required>
                     </div>
                 </div>
 
@@ -94,7 +94,7 @@ class FormMarkup {
                         <label for="ocf_enquiry_<?php echo $form_ID; ?>">Enquiry.</label>
                     </div>
                     <div class="col-md-8">
-                        <textarea name="ocf_enquiry" id="ocf_enquiry_<?php echo $form_ID; ?>"></textarea>
+                        <textarea name="ocf_enquiry" id="ocf_enquiry_<?php echo $form_ID; ?>" required></textarea>
                     </div>
                 </div>
 

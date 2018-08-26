@@ -30,7 +30,7 @@ class FormData {
 	 *
 	 * @param array $form_data
 	 */
-	public function __construct( array $form_data ) {
+	public function __construct( $form_data ) {
 
 		if ( is_array( $form_data ) ) :
 
