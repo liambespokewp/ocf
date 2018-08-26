@@ -56,13 +56,18 @@ class FormData {
 
 		endif;
 
-
 	}
 
 	/**
 	 * @return string
 	 */
 	public function getName() {
+
+		if (
+			empty( trim( $this->name ) )
+	        || !is_string( $this->name )
+		) return null;
+
 		return $this->name;
 	}
 
@@ -75,9 +80,15 @@ class FormData {
 	}
 
 	/**
-	 * @return string
+	 * @return string|null
 	 */
 	public function getEmail() {
+
+		if (
+			empty( trim( $this->email) )
+			|| !is_string( $this->email )
+		) return null;
+
 		return $this->email;
 	}
 
@@ -85,28 +96,52 @@ class FormData {
 	 * @param string $email
 	 */
 	private function setEmail( $email ) {
-		$this->email = sanitize_email( $email );
+
+		if ( filter_var($email, FILTER_VALIDATE_EMAIL) )
+			$this->email = sanitize_email( $email );
 	}
 
 	/**
-	 * @return string
+	 * @return int|null
 	 */
 	public function getTel() {
+
+		if (
+			empty( $this->tel )
+			|| !is_numeric( $this->tel )
+		) return null;
+
 		return $this->tel;
+
 	}
 
 	/**
 	 * @param string $tel
 	 */
 	private function setTel( $tel ) {
-		$this->tel = sanitize_text_field( $tel );
+
+		// strip all chars except numbers
+		$tel = preg_replace("/[^0-9]/","",$tel );
+
+		if ( is_numeric( $tel ) )
+			$this->tel = (int)sanitize_text_field( $tel );
+
+		else
+			$this->tel = null;
 	}
 
 	/**
 	 * @return string
 	 */
 	public function getEnquiry() {
+
+		if (
+			empty( trim( $this->enquiry) )
+			|| !is_string( $this->enquiry )
+		) return null;
+
 		return $this->enquiry;
+
 	}
 
 	/**

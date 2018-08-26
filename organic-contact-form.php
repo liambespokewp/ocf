@@ -12,6 +12,7 @@ defined( 'ABSPATH' ) or die;
 
 /** the prefix that is applied to any generated table */
 define('OCF_TABLE_PREFIX', 'ocf_');
+define('OCF_TABLE', 'contact_enteries');
 
 ////////////////
 /// Autoloader
@@ -37,6 +38,8 @@ spl_autoload_register(function ($class) {
 // instances must be called after the autoloader script.
 use OrganicContactForm\FormGlobalContainer as Container;
 use OrganicContactForm\FormShortcodes as Shortcodes;
+use OrganicContactForm\FormData as FormData;
+use OrganicContactForm\FormSubmission as Submission;
 
 ////////////////
 /// Global variables
@@ -50,23 +53,6 @@ use OrganicContactForm\FormShortcodes as Shortcodes;
 	 */
 	$shortcodes = new Shortcodes();
 
-
-///////////////
-/// Widgets
-///////////////
-
-	if ( !function_exists('register_ocf_widget') ) :
-
-		/**
-		 * Create widget
-		 * @see OrganicContactForm\FormWidget
-		 */
-		add_action( 'widgets_init', 'register_ocf_widget' );
-		function register_ocf_widget() {
-			register_widget( 'OrganicContactForm\FormWidget' );
-		}
-
-	endif;
 
 ////////////////
 /// Stylesheets and scripts
@@ -86,11 +72,78 @@ use OrganicContactForm\FormShortcodes as Shortcodes;
 
 			wp_enqueue_style( 'ocf_styles', $plugin_url . 'style.css' );
 
-			wp_enqueue_script( 'ocf_scripts', $plugin_url . 'scripts.js', array('jquery'), false, true );
+
+			// AJAXify and localize plugin scripts
+			wp_register_script( 'ocf_scripts', $plugin_url . 'scripts.js', array('jquery'), false, true );
+			$ajax_vars = array(
+				'adminurl' => admin_url('admin-ajax.php')
+			);
+			wp_localize_script( 'ocf_scripts', 'ajax_attributes', $ajax_vars );
+			wp_enqueue_script( 'ocf_scripts' );
 
 		}
 
 	endif;
+
+
+
+///////////////
+/// Form handling
+///////////////
+
+	add_action('init', function() {
+
+		global $ocf_container;
+
+		if ( isset( $_POST['ocf_submission'] ) && wp_verify_nonce( $_POST['ocf_submission'], 'a893y4ygmvpd9y8n7iku3haexinuyfjeg') ) :
+
+			// make sure all required form data is available in the $_POST request
+			if (
+				!isset( $_POST['ocf_name'] )
+				|| !isset( $_POST['ocf_email'] )
+				|| !isset( $_POST['ocf_enquiry'] )
+			) return false;
+
+			$ocf_container->setFormData( $_POST );
+
+			/** @var FormData|bool $form_data */
+			$form_data = $ocf_container->getFormData();
+
+			// make sure the object instantiated
+			if ( $form_data === false )
+				return false;
+
+			$submit_form = new Submission( $form_data );
+
+			if ( $submit_form ) :
+				// form was saved to DB
+			else :
+				// form failed to save to DB
+			endif;
+
+
+
+		endif;
+
+	});
+
+
+///////////////
+/// Widgets
+///////////////
+
+if ( !function_exists('register_ocf_widget') ) :
+
+	/**
+	 * Create widget
+	 * @see OrganicContactForm\FormWidget
+	 */
+	add_action( 'widgets_init', 'register_ocf_widget' );
+	function register_ocf_widget() {
+		register_widget( 'OrganicContactForm\FormWidget' );
+	}
+
+endif;
 
 ////////////////
 /// Activation
@@ -124,7 +177,7 @@ if ( !function_exists('ocf_create_database') ) :
 	                            `id_contact_entries` INT NOT NULL AUTO_INCREMENT,
 	                            `name` VARCHAR(100) NOT NULL,
 	                            `email` VARCHAR(50) NOT NULL,
-	                            `tel` VARCHAR(20) NOT NULL,
+	                            `tel` VARCHAR(20),
 	                            `enquiry` TEXT NOT NULL,
 	                            `date` DATETIME NOT NULL,
 	                            `ref_page` TEXT NOT NULL,

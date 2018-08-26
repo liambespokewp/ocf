@@ -33,13 +33,6 @@ class FormGlobalContainer {
 		// Will keep the form ID's unique
 		$this->form_markup_container = new FormMarkup();
 
-		// Keep the form data in a global object
-		if ( isset( $_POST['ocf_submission'] )
-		     && wp_verify_nonce( $_POST['ocf_submission'], 'a893y4ygmvpd9y8n7iku3haexinuyfjeg' )
-		) :
-			$this->form_data = new FormData( $_POST );
-		endif;
-
 	}
 
 	/**
@@ -52,12 +45,24 @@ class FormGlobalContainer {
 	}
 
 	/**
-	 * @return \OrganicContactForm\FormData
+	 * @return bool|\OrganicContactForm\FormData
 	 */
 	public function getFormData() {
 
+		// if nothing has been set before this is called, return false
+		if ( !is_a( $this->form_data, 'OrganicContactForm\FormData' ) )
+			return false;
+
 		return $this->form_data;
 
+	}
+
+	/**
+	 * @var $form_data array an array containing all the relevant fields to persist
+	 * to the database
+	 */
+	public function setFormData( $form_data ) {
+		$this->form_data = new FormData( $form_data );
 	}
 
 }

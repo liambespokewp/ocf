@@ -84,7 +84,7 @@ class FormMarkup {
                         <label for="ocf_tel_<?php echo $form_ID; ?>">Tel.</label>
                     </div>
                     <div class="col-md-8">
-                        <input name="ocf_tel" id="ocf_tel_<?php echo $form_ID; ?>" type="tel">
+                        <input name="ocf_tel" id="ocf_tel_<?php echo $form_ID; ?>" type="number">
                     </div>
                 </div>
 
@@ -104,7 +104,7 @@ class FormMarkup {
                         <span class="ocf-ajax-spinner"></span>
                     </div>
                     <div class="col-md-8">
-                        <input class="ocf-submit__button" type="submit">
+                        <input class="ocf-submit__button ajax-submit" type="submit">
                     </div>
                 </div>
 
