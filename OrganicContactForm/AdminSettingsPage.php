@@ -46,10 +46,16 @@ class AdminSettingsPage {
 
 			<h2>Manage form entries</h2>
 
-			<form target="_blank" class="admin-form__download-entries" method="post" action="<?php echo admin_url('admin.php') ?>">
-				<input class="button button-primary" type="submit" value="Download CSV of all entries">
-                <?php wp_nonce_field('839ytgmhwlcs897tgjhvsbrgyin7kuc', 'download_entries')?>
-			</form>
+
+		    <?php $entries = $this->getPaginatedEntries(); ?>
+
+
+            <?php if ( !empty($entries) ) : ?>
+                <form target="_blank" class="admin-form__download-entries" method="post" action="<?php echo admin_url('admin.php') ?>">
+                    <input class="button button-primary" type="submit" value="Download CSV of all entries">
+                    <?php wp_nonce_field('839ytgmhwlcs897tgjhvsbrgyin7kuc', 'download_entries')?>
+                </form>
+            <?php endif; ?>
 
 			<form class="admin-form__actions" method="get" action="<?php echo admin_url('admin.php') ?>">
                 <label for="limit">Show per page:</label>
@@ -81,8 +87,6 @@ class AdminSettingsPage {
 					</thead>
 
 					<tbody>
-
-						<?php $entries = $this->getPaginatedEntries(); ?>
 
 						<?php foreach ( $entries as $entry ) : ?>
 

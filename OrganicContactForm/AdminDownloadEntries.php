@@ -13,7 +13,7 @@ class AdminDownloadEntries {
 
 	public function __construct() {
 		$entries = $this->getEntries();
-		$file = $this->arrayToCSV($entries);
+		$this->arrayToCSV($entries);
 	}
 
 	public function getEntries() {
@@ -37,12 +37,19 @@ class AdminDownloadEntries {
 		fputcsv($f, $headers, $delimiter);
 
 		// loop over the input array
-		foreach ($array as $line) {
-			// generate csv lines from the inner arrays
-			if( is_object($line) )
-				$line = (array) $line;
-			fputcsv($f, $line, $delimiter);
-		}
+
+		if ( !empty($array) ) :
+			foreach ($array as $line) :
+
+				// generate csv lines from the inner arrays
+				if( is_object($line) )
+					$line = (array) $line;
+
+				fputcsv($f, $line, $delimiter);
+
+			endforeach;
+		endif;
+
 		// reset the file pointer to the start of the file
 		fseek($f, 0);
 		// tell the browser it's going to be a csv file
