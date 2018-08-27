@@ -294,9 +294,12 @@ endif;
 
 	// remove error messages after they have been presented on the frontend
 	add_action('shutdown', function() {
-//		if ( isset( $_SESSION['error_container'] )  )
-//			unset( $_SESSION['error_container'] );
-//
-//		if ( isset( $_SESSION['form_submitted'] )  )
-//			unset( $_SESSION['form_submitted'] );
+		if ( isset( $_SESSION['error_container'] )  )
+			unset( $_SESSION['error_container'] );
+
+		if ( isset( $_SESSION['form_submitted'] )  )
+			unset( $_SESSION['form_submitted'] );
+
+		if ( isset( $_SESSION['form_data'] )  )
+			unset( $_SESSION['form_data'] );
 	});

@@ -68,6 +68,8 @@ class FormMarkup {
 
         endif;
 
+
+
 		// begin output
 		ob_start(); ?>
 
@@ -83,7 +85,7 @@ class FormMarkup {
                         <label for="ocf_name_<?php echo $form_ID; ?>">Name <sup>(required)</sup><?php render_error_message('name', $form_ID); ?></label>
                     </div>
                     <div class="col-md-8">
-                        <input name="ocf_name_<?php echo $form_ID; ?>" id="ocf_name_<?php echo $form_ID; ?>" type="text" required>
+                        <input name="ocf_name_<?php echo $form_ID; ?>" id="ocf_name_<?php echo $form_ID; ?>" type="text" required<?php $this->displayParsedValue('name', $form_ID);?>>
                     </div>
                 </div>
 
@@ -93,7 +95,7 @@ class FormMarkup {
                         <label for="ocf_email_<?php echo $form_ID; ?>">Email <sup>(required)</sup><?php render_error_message('email', $form_ID); ?></label>
                     </div>
                     <div class="col-md-8">
-                        <input  name="ocf_email_<?php echo $form_ID; ?>" id="ocf_email_<?php echo $form_ID; ?>" type="email" required>
+                        <input  name="ocf_email_<?php echo $form_ID; ?>" id="ocf_email_<?php echo $form_ID; ?>" type="email" required<?php $this->displayParsedValue('email', $form_ID);?>>
                     </div>
                 </div>
 
@@ -103,7 +105,7 @@ class FormMarkup {
                         <label for="ocf_tel_<?php echo $form_ID; ?>">Tel.<?php render_error_message('tel', $form_ID); ?></label>
                     </div>
                     <div class="col-md-8">
-                        <input name="ocf_tel_<?php echo $form_ID; ?>" id="ocf_tel_<?php echo $form_ID; ?>" type="tel">
+                        <input name="ocf_tel_<?php echo $form_ID; ?>" id="ocf_tel_<?php echo $form_ID; ?>" type="tel"<?php $this->displayParsedValue('tel', $form_ID);?>>
                     </div>
                 </div>
 
@@ -113,7 +115,7 @@ class FormMarkup {
                         <label for="ocf_enquiry_<?php echo $form_ID; ?>">Enquiry <sup>(required)</sup><?php render_error_message('enquiry', $form_ID); ?></label>
                     </div>
                     <div class="col-md-8">
-                        <textarea name="ocf_enquiry_<?php echo $form_ID; ?>" id="ocf_enquiry_<?php echo $form_ID; ?>" required></textarea>
+                        <textarea name="ocf_enquiry_<?php echo $form_ID; ?>" id="ocf_enquiry_<?php echo $form_ID; ?>" required><?php $this->displayParsedValue('enquiry', $form_ID);?></textarea>
                     </div>
                 </div>
 
@@ -160,6 +162,34 @@ class FormMarkup {
 		    $message = 'Try again?';
 
         echo $message;
+
+
+    }
+
+    private function displayParsedValue( $field_type, $form_id ) {
+
+	    $message = '';
+
+	    switch ( $field_type ) :
+
+            case 'name' :
+                $message = $_SESSION['form_data'][$form_id]['name'];
+                break;
+            case 'email' :
+                $message = $_SESSION['form_data'][$form_id]['email'];
+                break;
+            case 'tel' :
+                $message = $_SESSION['form_data'][$form_id]['tel'];
+                break;
+            case 'enquiry' :
+                $message = $_SESSION['form_data'][$form_id]['enquiry'];
+                echo $message;
+                return;
+                break;
+
+        endswitch;
+
+        echo ' value="' . $message .'"';
 
 
     }

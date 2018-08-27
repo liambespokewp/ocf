@@ -120,6 +120,13 @@ class FormSubmission {
 
 			$_SESSION['form_submitted'][$form_id] = false;
 			$this->submitted = false;
+
+			$_SESSION['form_data'][$form_id] = array(
+				'name' => $form_data->getName(),
+				'email' => $form_data->getEmail(),
+				'tel' => $form_data->getTel(),
+				'enquiry' => $form_data->getEnquiry()
+			);
 		}
 
 		else {
