@@ -97,5 +97,6 @@ class AdminDownloadEntries {
 		header('Content-Disposition: attachment; filename="'.$filename.'";');
 		// make php send the generated csv lines to the browser
 		fpassthru($f);
+		exit;
 	}
 }
