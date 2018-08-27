@@ -119,23 +119,7 @@ use OrganicContactForm\AdminDownloadEntries as AdminDownloadEntries;
 		// if form is submitted without JavaScript
 		add_action('init', 'ocf_handleFormSubmission' );
 
-		// ajax calls
-		add_action('wp_ajax_nopriv_submit_contact_form', function() {
-			ocf_handleFormSubmission( true );
-		} );
-		add_action('wp_ajax_submit_contact_form', function() {
-			ocf_handleFormSubmission( true );
-		} );
-
-		function ocf_handleFormSubmission( $ajax = false ) {
-
-			// My fault. Bad coding. Moving form data in to the post object when submitted via ajax..
-			if ( isset( $_POST['action'] ) && $_POST['action'] === 'submit_contact_form' ) :
-				$form_data = $_POST['form'];
-				$params = array();
-				parse_str($form_data, $params);
-				$_POST = $params;
-			endif;
+		function ocf_handleFormSubmission() {
 
 			$formID = $_POST['form_id'];
 
@@ -167,26 +151,6 @@ use OrganicContactForm\AdminDownloadEntries as AdminDownloadEntries;
 					return false;
 
 				$submit_form = new Submission( $form_data );
-
-				// if AJAX and form submitted
-				if ( $submit_form && $ajax ) :
-					// form saved to DB
-					echo json_encode( array( 'saved' => true ) );
-					die;
-
-				// if form not submitted but sill an AJAX call
-				elseif ( $ajax ) :
-					// form failed to save to DB
-					echo json_encode( array( 'saved' => false ) );
-					die;
-
-				elseif ( !$ajax && $submit_form ) :
-					$_SESSION['form_submitted'][$formID] = true;
-
-				else :
-					$_SESSION['form_submitted'][$formID] = false;
-				endif;
-
 
 			endif;
 

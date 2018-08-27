@@ -19,10 +19,15 @@ defined( 'ABSPATH' ) or die;
  */
 class FormSubmission {
 
+
+
 	/** @var FormData form fields submitted via an OCF form */
-	private $formData;
+	private $formData, $submitted;
+
 
 	public function __construct( $form_data ) {
+
+		$this->submitted = false;
 
 		// make sure data has been validated
 		if ( !is_a($form_data, 'OrganicContactForm\FormData') )
@@ -33,6 +38,13 @@ class FormSubmission {
 		// returns bool if persisted/failed
 		return $this->persistToDatabase();
 
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function getSubmittedState() {
+		return $this->submitted;
 	}
 
 
@@ -54,7 +66,7 @@ class FormSubmission {
 		$name           = $form_data->getName();
 		$email          = $form_data->getEmail();
 		$enquiry        = $form_data->getEnquiry();
-		$tel            = false;
+		$tel            = $form_data->getTel();
 		$form_id = $_POST['form_id'];
 
 		$data = array(
@@ -97,13 +109,17 @@ class FormSubmission {
 		endif;
 
 
-		if ( !empty( $_SESSION['error_container'] ) || !$wpdb->insert(
-			$table,
-			$data,
-			$format
-		) ) return false;
+		if (
+			!empty( $_SESSION['error_container'] )
+			|| !$wpdb->insert(
+				$table,
+				$data,
+				$format
+			)
+		) $this->submitted = false;
 
-		return true;
+		else
+			$this->submitted = true;
 
 	}
 

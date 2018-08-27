@@ -113,11 +113,6 @@ class FormData {
 	 */
 	public function getTel() {
 
-		if (
-			empty( $this->tel )
-			|| !is_numeric( $this->tel )
-		) return null;
-
 		return $this->tel;
 
 	}
@@ -137,7 +132,7 @@ class FormData {
 			$this->tel = null;
 
 		else
-			false;
+			$this->tel = false;
 	}
 
 	/**

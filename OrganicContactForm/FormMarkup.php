@@ -80,7 +80,7 @@ class FormMarkup {
                 <!-- start name field-->
 				<div class="row">
                     <div class="col-md-4">
-                        <label for="ocf_name_<?php echo $form_ID; ?>">Name <sup>(required)</sup><?php render_error_message('name', $form_ID); ?></label>
+                        <label data-elem="name"  for="ocf_name_<?php echo $form_ID; ?>">Name <sup>(required)</sup><?php render_error_message('name', $form_ID); ?></label>
                     </div>
                     <div class="col-md-8">
                         <input name="ocf_name_<?php echo $form_ID; ?>" id="ocf_name_<?php echo $form_ID; ?>" type="text" class="ajax-validation" required>
@@ -90,17 +90,17 @@ class FormMarkup {
                 <!-- start email field-->
 				<div class="row">
                     <div class="col-md-4">
-                        <label for="ocf_email_<?php echo $form_ID; ?>">Email <sup>(required)</sup><?php render_error_message('email', $form_ID); ?></label>
+                        <label data-elem="email" for="ocf_email_<?php echo $form_ID; ?>">Email <sup>(required)</sup><?php render_error_message('email', $form_ID); ?></label>
                     </div>
                     <div class="col-md-8">
-                        <input name="ocf_email_<?php echo $form_ID; ?>" id="ocf_email_<?php echo $form_ID; ?>" type="email" class="ajax-validation" required>
+                        <input  name="ocf_email_<?php echo $form_ID; ?>" id="ocf_email_<?php echo $form_ID; ?>" type="email" class="ajax-validation" required>
                     </div>
                 </div>
 
                 <!-- start tel field-->
 				<div class="row">
                     <div class="col-md-4">
-                        <label for="ocf_tel_<?php echo $form_ID; ?>">Tel.<?php render_error_message('tel', $form_ID); ?></label>
+                        <label data-elem="tel" for="ocf_tel_<?php echo $form_ID; ?>">Tel.<?php render_error_message('tel', $form_ID); ?></label>
                     </div>
                     <div class="col-md-8">
                         <input data-validation="tel" name="ocf_tel_<?php echo $form_ID; ?>" id="ocf_tel_<?php echo $form_ID; ?>" type="tel" class="ajax-validation">
@@ -110,7 +110,7 @@ class FormMarkup {
                 <!-- start enquiry field-->
 				<div class="row">
                     <div class="col-md-4">
-                        <label for="ocf_enquiry_<?php echo $form_ID; ?>">Enquiry <sup>(required)</sup><?php render_error_message('enquiry', $form_ID); ?></label>
+                        <label data-elem="enquiry" for="ocf_enquiry_<?php echo $form_ID; ?>">Enquiry <sup>(required)</sup><?php render_error_message('enquiry', $form_ID); ?></label>
                     </div>
                     <div class="col-md-8">
                         <textarea name="ocf_enquiry_<?php echo $form_ID; ?>" id="ocf_enquiry_<?php echo $form_ID; ?>" class="ajax-validation" required></textarea>
