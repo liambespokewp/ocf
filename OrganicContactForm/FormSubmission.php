@@ -116,10 +116,17 @@ class FormSubmission {
 				$data,
 				$format
 			)
-		) $this->submitted = false;
+		)  {
 
-		else
+			$_SESSION['form_submitted'][$form_id] = false;
+			$this->submitted = false;
+		}
+
+		else {
+			$_SESSION['form_submitted'][$form_id] = true;
 			$this->submitted = true;
+
+		}
 
 	}
 

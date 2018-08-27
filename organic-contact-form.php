@@ -58,7 +58,7 @@ use OrganicContactForm\AdminDownloadEntries as AdminDownloadEntries;
 	if (session_status() == PHP_SESSION_NONE)
 		session_start();
 
-	$_SESSION['error_container'];
+	$_SESSION['error_container'] = array();
 
 
 ////////////////
@@ -121,8 +121,6 @@ use OrganicContactForm\AdminDownloadEntries as AdminDownloadEntries;
 
 		function ocf_handleFormSubmission() {
 
-			$formID = $_POST['form_id'];
-
 			global $ocf_container;
 
 			// add contact form to DB (after validation)
@@ -150,7 +148,7 @@ use OrganicContactForm\AdminDownloadEntries as AdminDownloadEntries;
 				if ( $form_data === false )
 					return false;
 
-				$submit_form = new Submission( $form_data );
+				new Submission( $form_data );
 
 			endif;
 
@@ -296,9 +294,9 @@ endif;
 
 	// remove error messages after they have been presented on the frontend
 	add_action('shutdown', function() {
-		if ( isset( $_SESSION['error_container'] )  )
-			unset( $_SESSION['error_container'] );
-
-		if ( isset( $_SESSION['form_submitted'] )  )
-			unset( $_SESSION['form_submitted'] );
+//		if ( isset( $_SESSION['error_container'] )  )
+//			unset( $_SESSION['error_container'] );
+//
+//		if ( isset( $_SESSION['form_submitted'] )  )
+//			unset( $_SESSION['form_submitted'] );
 	});
