@@ -8,11 +8,21 @@
 
 namespace OrganicContactForm;
 
+defined( 'ABSPATH' ) or die;
 
+/**
+ * Create and manage the WP Admin settings page for the entries
+ *
+ * Class AdminSettingsPage
+ * @package OrganicContactForm
+ */
 class AdminSettingsPage {
 
     private $maxPages, $limit, $table, $pagi;
 
+	/**
+	 * AdminSettingsPage constructor.
+	 */
 	public function __construct() {
 
 	    $this->table = OCF_TABLE_PREFIX . OCF_TABLE;
@@ -24,10 +34,18 @@ class AdminSettingsPage {
 
 		$this->pagi = isset( $_GET['pagi'] ) && is_numeric( $_GET['pagi'] ) &&  $_GET['pagi'] >= 1 ? (int)$_GET['pagi'] : 1;
 
+		/**
+         * Add admin page to the menu
+         *
+         * @see AdminSettingsPage->plugin_admin_add_page();
+         */
 		add_action('admin_menu', array( $this, 'plugin_admin_add_page') );
 
 	}
 
+	/**
+	 * Creates a WP admin menu item
+	 */
 	public function plugin_admin_add_page() {
 
 		add_menu_page(
@@ -40,6 +58,9 @@ class AdminSettingsPage {
 
 	}
 
+	/**
+	 * Output for the entries table
+	 */
 	public function plugin_options_page() { ?>
 
 		<div>
@@ -161,6 +182,8 @@ class AdminSettingsPage {
     }
 
 	/**
+     * The current pagination requested
+     *
 	 * @return int
 	 */
 	private function getCurrentPage() {
@@ -168,12 +191,19 @@ class AdminSettingsPage {
     }
 
 	/**
+     * Get the DB table name
+     *
 	 * @return string
 	 */
 	private function getTable() {
 	    return $this->table;
     }
 
+	/**
+     * Get only the required entries to display on the relevant page, based on pagination
+     *
+	 * @return array|null|object
+	 */
 	private function getPaginatedEntries() {
 
 		global $wpdb;
@@ -200,15 +230,23 @@ class AdminSettingsPage {
 	 */
 	private function renderPagination() {
 
+	    // init vars
 	    $max_pages = $this->getMaxPages();
 	    $current_page_url = $_SERVER['REQUEST_URI'];
-	    $current_page =  isset( $_GET['pagi'] ) ? $_GET['pagi'] : 1;
 
+	    $current_page =  isset( $_GET['pagi'] )
+                         && is_numeric($_GET['pagi'] )
+                         && $_GET['pagi'] > 0
+            ? (int)$_GET['pagi']
+            : 1;
+
+	    // Remove pagi from the URL (this is added on each link, as required)
 	    if ( isset( $_GET['pagi'] ) )
 		    $current_page_url = remove_query_arg('pagi', $current_page_url );
 
 	    $i = 1;
 
+	    // only display pagination if there are more than one pages needed
 	    if ( $max_pages > 1 ) : ?>
 
             <ul class="tablenav-pages ocf-tablenav-pages">
@@ -216,8 +254,8 @@ class AdminSettingsPage {
 
                     $pagi_url = add_query_arg( 'pagi', $i, $current_page_url );
 
-
-	                if ( $current_page == $i ) : ?>
+                    // only add link to item if it is not the current page
+	                if ( $current_page === $i || ( $current_page === 1 && $i === 1 ) ) : ?>
                         <li class="current-pagi"><?php echo $i; ?></li><?php
                     else : ?>
                         <li><a href="<?php echo $pagi_url; ?>"><?php echo $i; ?></a></li><?php

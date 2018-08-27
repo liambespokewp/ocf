@@ -8,6 +8,8 @@
 
 namespace OrganicContactForm;
 
+defined( 'ABSPATH' ) or die;
+
 /**
  * Handles the validation of the data to be parsed to the
  * database/handled appropriately
@@ -125,14 +127,17 @@ class FormData {
 	 */
 	private function setTel( $tel ) {
 
-		// strip all chars except numbers
-		$tel = preg_replace("/[^0-9]/","",$tel );
+		$tel = trim($tel);
 
-		if ( is_numeric( $tel ) )
+
+		if ( !empty( $tel ) && preg_match( "/^[0-9 ]+$/", $tel ) )
 			$this->tel = (int)sanitize_text_field( $tel );
 
-		else
+		elseif ( empty( $tel ) )
 			$this->tel = null;
+
+		else
+			false;
 	}
 
 	/**

@@ -51,8 +51,27 @@ class FormMarkup {
 		$this->increaseFormCount();
 		$form_ID = $this->getFormCount();
 
+		$form_submitted_class = '';
+		$submission_state = null;
+
+		if ( isset( $_SESSION['form_submitted'][$form_ID] ) ) :
+
+		    $form_submitted = $_SESSION['form_submitted'][$form_ID];
+
+		    if ( $form_submitted === true ) :
+			    $form_submitted_class = ' submitted';
+		        $submission_state = true;
+            else :
+	            $form_submitted_class = ' failed-submission';
+			    $submission_state = false;
+            endif;
+
+        endif;
+
 		// begin output
 		ob_start(); ?>
+
+
 
 		<form method="post" class="ocf-form ajax-target">
 
@@ -61,7 +80,7 @@ class FormMarkup {
                 <!-- start name field-->
 				<div class="row">
                     <div class="col-md-4">
-                        <label for="ocf_name_<?php echo $form_ID; ?>">Name<?php render_error_message('name', $form_ID); ?></label>
+                        <label for="ocf_name_<?php echo $form_ID; ?>">Name <sup>(required)</sup><?php render_error_message('name', $form_ID); ?></label>
                     </div>
                     <div class="col-md-8">
                         <input name="ocf_name_<?php echo $form_ID; ?>" id="ocf_name_<?php echo $form_ID; ?>" type="text" class="ajax-validation" required>
@@ -71,7 +90,7 @@ class FormMarkup {
                 <!-- start email field-->
 				<div class="row">
                     <div class="col-md-4">
-                        <label for="ocf_email_<?php echo $form_ID; ?>">Email<?php render_error_message('email', $form_ID); ?></label>
+                        <label for="ocf_email_<?php echo $form_ID; ?>">Email <sup>(required)</sup><?php render_error_message('email', $form_ID); ?></label>
                     </div>
                     <div class="col-md-8">
                         <input name="ocf_email_<?php echo $form_ID; ?>" id="ocf_email_<?php echo $form_ID; ?>" type="email" class="ajax-validation" required>
@@ -81,17 +100,17 @@ class FormMarkup {
                 <!-- start tel field-->
 				<div class="row">
                     <div class="col-md-4">
-                        <label for="ocf_tel_<?php echo $form_ID; ?>">Tel.</label>
+                        <label for="ocf_tel_<?php echo $form_ID; ?>">Tel.<?php render_error_message('tel', $form_ID); ?></label>
                     </div>
                     <div class="col-md-8">
-                        <input name="ocf_tel_<?php echo $form_ID; ?>" id="ocf_tel_<?php echo $form_ID; ?>" type="text">
+                        <input data-validation="tel" name="ocf_tel_<?php echo $form_ID; ?>" id="ocf_tel_<?php echo $form_ID; ?>" type="tel" class="ajax-validation">
                     </div>
                 </div>
 
                 <!-- start enquiry field-->
 				<div class="row">
                     <div class="col-md-4">
-                        <label for="ocf_enquiry_<?php echo $form_ID; ?>">Enquiry.<?php render_error_message('enquiry', $form_ID); ?></label>
+                        <label for="ocf_enquiry_<?php echo $form_ID; ?>">Enquiry <sup>(required)</sup><?php render_error_message('enquiry', $form_ID); ?></label>
                     </div>
                     <div class="col-md-8">
                         <textarea name="ocf_enquiry_<?php echo $form_ID; ?>" id="ocf_enquiry_<?php echo $form_ID; ?>" class="ajax-validation" required></textarea>
@@ -104,14 +123,14 @@ class FormMarkup {
                         <span class="ocf-ajax-message"></span>
                     </div>
                     <div class="col-md-8">
-                        <input class="ocf-submit__button ajax-submit" type="submit">
+                        <input class="ocf-submit__button ajax-submit<?php echo $form_submitted_class; ?>" type="submit" value="<?php $this->setSubmitText( $submission_state ); ?>">
                     </div>
                 </div>
 
 			</div>
 
             <?php wp_nonce_field('a893y4ygmvpd9y8n7iku3haexinuyfjeg', 'ocf_submission'); ?>
-            <input type="hidden" name="form_id" value="<?php echo $this->getFormCount(); ?>">
+            <input type="hidden" name="form_id" value="<?php echo $this->getFormCount(); ?>" >
 
 		</form><?php
 
@@ -128,6 +147,20 @@ class FormMarkup {
         $new_form = $this->getNewForm();
 
         echo $new_form;
+
+    }
+
+    private function setSubmitText( $submission_state ) {
+
+	    $message = 'Submit Query';
+
+	    if ( $submission_state === true )
+		    $message = 'Thanks for the query!';
+	    elseif ( $submission_state === false )
+		    $message = 'Try again?';
+
+        echo $message;
+
 
     }
 }

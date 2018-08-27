@@ -54,7 +54,7 @@ class FormSubmission {
 		$name           = $form_data->getName();
 		$email          = $form_data->getEmail();
 		$enquiry        = $form_data->getEnquiry();
-		$tel            = $form_data->getTel();
+		$tel            = false;
 		$form_id = $_POST['form_id'];
 
 		$data = array(
@@ -89,9 +89,11 @@ class FormSubmission {
 			$_SESSION['error_container'][$form_id]['enquiry'] = 'Need to supply a valid enquiry';
 		endif;
 
-		if ( $tel !== false && !is_null( $tel ) ) :
+		if ( $tel !== false ) :
 			$data['tel'] = $tel;
 			$format[] = '%d';
+		else :
+			$_SESSION['error_container'][$form_id]['tel'] = 'Need to supply a valid number';
 		endif;
 
 

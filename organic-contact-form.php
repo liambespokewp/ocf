@@ -80,7 +80,7 @@ use OrganicContactForm\AdminDownloadEntries as AdminDownloadEntries;
 			wp_enqueue_style( 'ocf_styles', $plugin_url . 'style.css' );
 
 
-			// AJAXify and localize plugin scripts
+			// Localize plugin scripts
 			wp_register_script( 'ocf_scripts', $plugin_url . 'scripts.js', array('jquery'), false, true );
 			$ajax_vars = array(
 				'adminurl' => admin_url('admin-ajax.php')
@@ -95,7 +95,7 @@ use OrganicContactForm\AdminDownloadEntries as AdminDownloadEntries;
 	if ( !function_exists('ocf_load_plugin_admin_scripts' ) ) :
 
 		/**
-		 * Load the scripts required in the plugin
+		 * Load the admin scripts required in the plugin
 		 */
 		add_action( 'admin_enqueue_scripts', 'ocf_load_plugin_admin_scripts' );
 		function ocf_load_plugin_admin_scripts() {
@@ -114,25 +114,30 @@ use OrganicContactForm\AdminDownloadEntries as AdminDownloadEntries;
 ///////////////
 
 
-	if ( !function_exists( 'handleFormSubmission' ) ) :
+	if ( !function_exists( 'ocf_handleFormSubmission' ) ) :
 
-		add_action('init', 'handleFormSubmission');
-		add_action('wp_ajax_nopriv_submit_contact_form', 'handleFormSubmission');
-		add_action('wp_ajax_submit_contact_form', 'handleFormSubmission');
+		// if form is submitted without JavaScript
+		add_action('init', 'ocf_handleFormSubmission' );
 
-		function handleFormSubmission() {
+		// ajax calls
+		add_action('wp_ajax_nopriv_submit_contact_form', function() {
+			ocf_handleFormSubmission( true );
+		} );
+		add_action('wp_ajax_submit_contact_form', function() {
+			ocf_handleFormSubmission( true );
+		} );
 
-			$ajax = false;
+		function ocf_handleFormSubmission( $ajax = false ) {
 
-			// My fault. Bad coding. Moving form data in to the post object when submitted via ajax
+			// My fault. Bad coding. Moving form data in to the post object when submitted via ajax..
 			if ( isset( $_POST['action'] ) && $_POST['action'] === 'submit_contact_form' ) :
 				$form_data = $_POST['form'];
 				$params = array();
 				parse_str($form_data, $params);
 				$_POST = $params;
-				$ajax = true;
-
 			endif;
+
+			$formID = $_POST['form_id'];
 
 			global $ocf_container;
 
@@ -163,15 +168,25 @@ use OrganicContactForm\AdminDownloadEntries as AdminDownloadEntries;
 
 				$submit_form = new Submission( $form_data );
 
+				// if AJAX and form submitted
 				if ( $submit_form && $ajax ) :
 					// form saved to DB
 					echo json_encode( array( 'saved' => true ) );
 					die;
-				else :
+
+				// if form not submitted but sill an AJAX call
+				elseif ( $ajax ) :
 					// form failed to save to DB
-					echo json_encode( array( 'saved' => true ) );
+					echo json_encode( array( 'saved' => false ) );
 					die;
+
+				elseif ( !$ajax && $submit_form ) :
+					$_SESSION['form_submitted'][$formID] = true;
+
+				else :
+					$_SESSION['form_submitted'][$formID] = false;
 				endif;
+
 
 			endif;
 
@@ -181,11 +196,8 @@ use OrganicContactForm\AdminDownloadEntries as AdminDownloadEntries;
 
 	add_action('admin_init', function() {
 
-		// Download CSV file
-		if (
-			isset( $_POST['download_entries'] )
-			&& wp_verify_nonce($_POST['download_entries'], '839ytgmhwlcs897tgjhvsbrgyin7kuc' )
-		) new AdminDownloadEntries();
+		// Download CSV file on button press, (nonce checks in construct of class)
+		new AdminDownloadEntries();
 
 	});
 
@@ -196,6 +208,9 @@ use OrganicContactForm\AdminDownloadEntries as AdminDownloadEntries;
 
 	if ( !function_exists('render_error_message') ) :
 
+		/**
+		 * If the server has parsed an error message for a form, display it as required
+		 */
 		function render_error_message( $field, $form_ID ) {
 
 
@@ -315,8 +330,11 @@ endif;
 	endif;
 
 
-	// remove error messages after they have beed presented on the frontend
+	// remove error messages after they have been presented on the frontend
 	add_action('shutdown', function() {
 		if ( isset( $_SESSION['error_container'] )  )
 			unset( $_SESSION['error_container'] );
+
+		if ( isset( $_SESSION['form_submitted'] )  )
+			unset( $_SESSION['form_submitted'] );
 	});

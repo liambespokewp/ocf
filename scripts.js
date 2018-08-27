@@ -6,20 +6,42 @@
 
         $body.on( 'click', '.ajax-submit:not(:disabled)', function(e) {
 
+            // e.preventDefault();
+
             var $this = $(this);
             var form = $this.parents('form.ajax-target');
 
             var form_valid = true;
 
-            form.find('input.ajax-validation, textarea.ajax-validation').each( function() {
-                if ( !$(this)[0].checkValidity() )
+            form.find('input.ajax-validation, textarea.ajax-validation').each(function () {
+
+                if ( !$(this)[0].checkValidity() ) {
                     form_valid = false;
+                    $(this)[0].setCustomValidity("not a valid input")
+                }
+
+                // add basic validation checks here as needed
+                if ( $(this).attr('data-validation') ) {
+
+                    var validation_type = $(this).attr('data-validation');
+
+                    if ( validation_type === 'tel') {
+                        // Make sure it is numbers only.
+                        var regex=/^(?=.*\d)[\d ]+$/;
+                        if ( !$(this).val().match(regex) ) {
+                            $(this)[0].setCustomValidity("not a valid input");
+                            form_valid = false;
+                        }
+
+
+                    }
+                }
+
             });
 
             if ( !form_valid )
                 return;
 
-            e.preventDefault();
 
             $this.attr('disabled', true);
 
@@ -35,11 +57,11 @@
                 url: ajax_attributes.adminurl,
                 data: data
             })
-                .done(function( msg ) {
+                .done(function (msg) {
 
                     var JSON = jQuery.parseJSON(msg);
 
-                    if ( JSON.saved ) {
+                    if (JSON.saved) {
                         $this.addClass('submitted').val('Thanks for your query!');
                         form.find('textarea, input').attr('disabled', true);
                     } else {
@@ -51,12 +73,11 @@
                     }
 
 
-
-
                 })
-                .fail( function( msg ) {
+                .fail(function (msg) {
                     console.log('failed')
                 })
+
 
         });
 

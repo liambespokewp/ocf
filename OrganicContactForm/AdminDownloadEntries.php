@@ -8,10 +8,30 @@
 
 namespace OrganicContactForm;
 
+defined( 'ABSPATH' ) or die;
 
+/**
+ * Handles all functions related to downloading the CSV file of entries
+ *
+ * Class AdminDownloadEntries
+ * @package OrganicContactForm
+ */
 class AdminDownloadEntries {
 
+	/**
+	 * Grab then entries and, if any exist, create a downloadable file. Otherwise
+	 * close the tab (should only be accessed from the form)
+	 *
+	 * AdminDownloadEntries constructor.
+	 */
 	public function __construct() {
+
+		// if function is not accessed from a form
+		if (
+			!isset( $_POST['download_entries'] )
+			|| !wp_verify_nonce($_POST['download_entries'], '839ytgmhwlcs897tgjhvsbrgyin7kuc' )
+		) return;
+
 		$entries = $this->getEntries();
 
 		// Fallback. Kills browser tab if no entries exist.
@@ -23,6 +43,11 @@ class AdminDownloadEntries {
 		$this->arrayToCSV($entries);
 	}
 
+	/**
+	 * Get all the entries from the database (used in CSV download)
+	 *
+	 * @return array|null|object
+	 */
 	public function getEntries() {
 
 		global $wpdb;
@@ -34,6 +59,13 @@ class AdminDownloadEntries {
 
 	}
 
+	/**
+	 * Convert the PHP array|object to a CSV file to download
+	 *
+	 * @param $array
+	 * @param string $filename
+	 * @param string $delimiter
+	 */
 	private function arrayToCSV($array, $filename = "export.csv", $delimiter=",") {
 
 		// open raw memory as file so no temp files needed, you might run out of memory though

@@ -8,6 +8,8 @@
 
 namespace OrganicContactForm;
 
+defined( 'ABSPATH' ) or die;
+
 use WP_Widget;
 
 /**
