@@ -6,7 +6,7 @@
 
         $body.on( 'click', '.ajax-submit:not(:disabled)', function(e) {
 
-            // e.preventDefault();
+            e.preventDefault();
 
             var $this = $(this);
             var form = $this.parents('form.ajax-target');
