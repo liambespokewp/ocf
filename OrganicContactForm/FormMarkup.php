@@ -73,57 +73,57 @@ class FormMarkup {
 
 
 
-		<form method="post" class="ocf-form ajax-target">
+		<form method="post" class="ocf-form">
 
 			<div class="container">
 
                 <!-- start name field-->
 				<div class="row">
                     <div class="col-md-4">
-                        <label data-elem="name"  for="ocf_name_<?php echo $form_ID; ?>">Name <sup>(required)</sup><?php render_error_message('name', $form_ID); ?></label>
+                        <label for="ocf_name_<?php echo $form_ID; ?>">Name <sup>(required)</sup><?php render_error_message('name', $form_ID); ?></label>
                     </div>
                     <div class="col-md-8">
-                        <input name="ocf_name_<?php echo $form_ID; ?>" id="ocf_name_<?php echo $form_ID; ?>" type="text" class="ajax-validation" required>
+                        <input name="ocf_name_<?php echo $form_ID; ?>" id="ocf_name_<?php echo $form_ID; ?>" type="text" required>
                     </div>
                 </div>
 
                 <!-- start email field-->
 				<div class="row">
                     <div class="col-md-4">
-                        <label data-elem="email" for="ocf_email_<?php echo $form_ID; ?>">Email <sup>(required)</sup><?php render_error_message('email', $form_ID); ?></label>
+                        <label for="ocf_email_<?php echo $form_ID; ?>">Email <sup>(required)</sup><?php render_error_message('email', $form_ID); ?></label>
                     </div>
                     <div class="col-md-8">
-                        <input  name="ocf_email_<?php echo $form_ID; ?>" id="ocf_email_<?php echo $form_ID; ?>" type="email" class="ajax-validation" required>
+                        <input  name="ocf_email_<?php echo $form_ID; ?>" id="ocf_email_<?php echo $form_ID; ?>" type="email" required>
                     </div>
                 </div>
 
                 <!-- start tel field-->
 				<div class="row">
                     <div class="col-md-4">
-                        <label data-elem="tel" for="ocf_tel_<?php echo $form_ID; ?>">Tel.<?php render_error_message('tel', $form_ID); ?></label>
+                        <label for="ocf_tel_<?php echo $form_ID; ?>">Tel.<?php render_error_message('tel', $form_ID); ?></label>
                     </div>
                     <div class="col-md-8">
-                        <input data-validation="tel" name="ocf_tel_<?php echo $form_ID; ?>" id="ocf_tel_<?php echo $form_ID; ?>" type="tel" class="ajax-validation">
+                        <input name="ocf_tel_<?php echo $form_ID; ?>" id="ocf_tel_<?php echo $form_ID; ?>" type="tel">
                     </div>
                 </div>
 
                 <!-- start enquiry field-->
 				<div class="row">
                     <div class="col-md-4">
-                        <label data-elem="enquiry" for="ocf_enquiry_<?php echo $form_ID; ?>">Enquiry <sup>(required)</sup><?php render_error_message('enquiry', $form_ID); ?></label>
+                        <label for="ocf_enquiry_<?php echo $form_ID; ?>">Enquiry <sup>(required)</sup><?php render_error_message('enquiry', $form_ID); ?></label>
                     </div>
                     <div class="col-md-8">
-                        <textarea name="ocf_enquiry_<?php echo $form_ID; ?>" id="ocf_enquiry_<?php echo $form_ID; ?>" class="ajax-validation" required></textarea>
+                        <textarea name="ocf_enquiry_<?php echo $form_ID; ?>" id="ocf_enquiry_<?php echo $form_ID; ?>" required></textarea>
                     </div>
                 </div>
 
-                <!--  start ajax spinner container/submission field -->
+                <!--  start submission button field -->
 				<div class="row ocf-submit__container">
                     <div class="col-md-4">
-                        <span class="ocf-ajax-message"></span>
+                        <span></span>
                     </div>
                     <div class="col-md-8">
-                        <input class="ocf-submit__button ajax-submit<?php echo $form_submitted_class; ?>" type="submit" value="<?php $this->setSubmitText( $submission_state ); ?>">
+                        <input class="ocf-submit__button<?php echo $form_submitted_class; ?>" type="submit" value="<?php $this->setSubmitText( $submission_state ); ?>">
                     </div>
                 </div>
 
