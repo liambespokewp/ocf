@@ -91,6 +91,18 @@ class AdminSettingsPage {
                 <input type="hidden" name="page" value="ocf_entries">
 			</form>
 
+            <?php $maxPages = $this->getMaxPages(); ?>
+            <?php if ( $maxPages > 1 ) : ?>
+                <form>
+                    <label for="pagi_input">Jump to page: </label>
+                    <input id="pagi_input" type="number" max="<?php echo $maxPages; ?>" min="1" <?php if ( isset( $_GET['pagi'] ) ) : ?>value="<?php echo  $_GET['pagi']; ?>"<?php endif; ?> name="pagi"><span>/<?php echo $maxPages; ?></span>
+                    <input type="hidden" name="page" value="ocf_entries">
+                    <?php if ( isset( $_GET['limit'] ) ) : ?>
+                        <input type="hidden" name="limit" value="<?php echo $_GET['limit']; ?>">
+                    <?php endif; ?>
+                </form>
+            <?php endif; ?>
+
             <?php  $this->renderPagination(); ?>
 
 			<div class="table__responsive-container">
