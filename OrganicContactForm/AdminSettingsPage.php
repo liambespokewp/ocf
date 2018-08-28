@@ -231,7 +231,7 @@ class AdminSettingsPage {
 	private function renderPagination() {
 
 	    // init vars
-	    $max_pages = $this->getMaxPages();
+	    $max_pages = (int)$this->getMaxPages();
 	    $current_page_url = $_SERVER['REQUEST_URI'];
 
 	    $current_page =  isset( $_GET['pagi'] )
@@ -239,6 +239,14 @@ class AdminSettingsPage {
                          && $_GET['pagi'] > 0
             ? (int)$_GET['pagi']
             : 1;
+
+
+		$min_range = ($current_page - 2);
+		$max_range = ($current_page + 2);
+
+		$lower_flex = $min_range - 1;
+		$higher_flex = $min_range + 1;
+
 
 	    // Remove pagi from the URL (this is added on each link, as required)
 	    if ( isset( $_GET['pagi'] ) )
@@ -252,13 +260,34 @@ class AdminSettingsPage {
             <ul class="tablenav-pages ocf-tablenav-pages">
                 <?php while ( $i <= $max_pages ) :
 
-                    $pagi_url = add_query_arg( 'pagi', $i, $current_page_url );
+                    if (
+                        $i === 1
+                        || filter_var(
+	                        $i,
+                            FILTER_VALIDATE_INT,
+                            array(
+                                'options' => array(
+                                    'min_range' => $min_range,
+                                    'max_range' => $max_range
+                                )
+                            )
+                        )
+                        || $i === $max_pages
+                    ) :
 
-                    // only add link to item if it is not the current page
-	                if ( $current_page === $i || ( $current_page === 1 && $i === 1 ) ) : ?>
-                        <li class="current-pagi"><?php echo $i; ?></li><?php
-                    else : ?>
-                        <li><a href="<?php echo $pagi_url; ?>"><?php echo $i; ?></a></li><?php
+                        $pagi_url = add_query_arg( 'pagi', $i, $current_page_url );
+
+                        // only add link to item if it is not the current page
+                        if ( $current_page === $i || ( $current_page === 1 && $i === 1 ) ) : ?>
+                            <li class="current-pagi"><?php echo $i; ?></li><?php
+                        else : ?>
+                            <li><a href="<?php echo $pagi_url; ?>"><?php echo $i; ?></a></li><?php
+                        endif;
+
+                    elseif ( $i === 2 || $i === $max_pages - 1) : ?>
+
+                        <li class="ellip-item">&hellip;</li><?php
+
                     endif;
 
                     $i++;

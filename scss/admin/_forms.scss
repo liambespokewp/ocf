@@ -18,7 +18,7 @@
     text-align: center;
 
     a {
-      color: 008#ec2;
+      color: #008ec2;
       display: block;
       padding: 0.4rem 0.6rem;
     }
@@ -27,6 +27,12 @@
       background: #008ec2;
       color: white;
       padding: 0.4rem 0.6rem;
+    }
+
+    &.ellip-item {
+      background: transparent;
+      border: none;
+      padding: 0 0.2rem;
     }
   }
 
