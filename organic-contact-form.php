@@ -75,20 +75,15 @@ use OrganicContactForm\AdminDownloadEntries as AdminDownloadEntries;
 
 			$plugin_url = fsi( plugin_dir_url( __FILE__ ) );
 
-			wp_enqueue_style( 'bootstrap', $plugin_url . 'node_modules/bootstrap/dist/css/bootstrap.min.css' );
 
+			// styles
+			wp_enqueue_style( 'bootstrap', $plugin_url . 'node_modules/bootstrap/dist/css/bootstrap.min.css' );
 			wp_enqueue_style( 'ocf_styles', $plugin_url . 'style.css' );
 
+
+			// scripts
 			wp_enqueue_script('parsleyjs' , $plugin_url . 'node_modules/parsleyjs/dist/parsley.js', array('jquery'), false, true );
-
-
-			// Localize plugin scripts
-			wp_register_script( 'ocf_scripts', $plugin_url . 'scripts.js', array('jquery', 'parsleyjs'), false, true );
-			$ajax_vars = array(
-				'adminurl' => admin_url('admin-ajax.php')
-			);
-			wp_localize_script( 'ocf_scripts', 'ajax_attributes', $ajax_vars );
-			wp_enqueue_script( 'ocf_scripts' );
+			wp_enqueue_script( 'ocf_scripts', $plugin_url . 'scripts.js', array('jquery', 'parsleyjs'), false, true );
 
 		}
 
@@ -103,6 +98,13 @@ use OrganicContactForm\AdminDownloadEntries as AdminDownloadEntries;
 		function ocf_load_plugin_admin_scripts() {
 
 			$plugin_url = fsi( plugin_dir_url( __FILE__ ) );
+
+			// scripts
+			wp_enqueue_script('admin-scripts' , $plugin_url . 'admin-scripts.js', array('jquery'), false, true );
+
+
+			// styles
+			wp_enqueue_style('font-awesome', $plugin_url . 'node_modules/@fortawesome/fontawesome-free/css/all.min.css');
 			wp_enqueue_style('admin-styles', $plugin_url . 'admin.css');
 
 		}
@@ -305,3 +307,5 @@ endif;
 		if ( isset( $_SESSION['form_data'] )  )
 			unset( $_SESSION['form_data'] );
 	});
+
+new \OrganicContactForm\AdminAjax();

@@ -1,0 +1,17 @@
+.actions {
+
+  &__delete {
+    background: $red;
+    border: 0px;
+    border-radius: 5px;
+    color: white;
+    cursor: pointer;
+    padding: 0.4rem 0.8rem;
+
+    &:hover,
+    &:active,
+    &:focus {
+      background: $hover-red;
+    }
+  }
+}

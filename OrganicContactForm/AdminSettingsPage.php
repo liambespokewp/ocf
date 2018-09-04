@@ -106,7 +106,7 @@ class AdminSettingsPage {
             <?php  $this->renderPagination(); ?>
 
 			<div class="table__responsive-container">
-				<table class="widefat fixed striped posts admin-table table-responsive">
+				<table class="widefat fixed striped posts admin-table table-responsive" id="entry-table">
 					<thead>
 						<tr>
 							<th style="width: 100px">ID</th>
@@ -116,6 +116,7 @@ class AdminSettingsPage {
 							<th>Enquiry</th>
 							<th>Date</th>
 							<th>Ref page</th>
+							<th>Actions</th>
 						</tr>
 					</thead>
 
@@ -126,7 +127,7 @@ class AdminSettingsPage {
                             <?php // convert the MYSQL date time to match the WordPress output options ?>
 
 						    <?php $formatted_date = \DateTime::createFromFormat( 'Y-m-d H:i:s', $entry->date )->format('jS F Y H:ia'); ?>
-							<tr>
+							<tr data-row-number="<?php echo $entry->id_contact_entries; ?>">
 								<td><?php echo $entry->id_contact_entries; ?></td>
 								<td><?php echo $entry->name; ?></td>
 								<td><?php echo $entry->email; ?></td>
@@ -134,6 +135,19 @@ class AdminSettingsPage {
 								<td><?php echo $entry->enquiry; ?></td>
 								<td><?php echo $formatted_date; ?></td>
 								<td><a href="<?php echo $entry->ref_page; ?>" target="_blank"><?php echo $entry->ref_page; ?></a></td>
+                                <td>
+                                    <form class="actions ajax-actions" method="post">
+
+                                        <!-- actions -->
+                                        <button class="actions__delete" type="submit" value="delete"><i class="fa fa-times"></i> delete</button>
+
+                                        <!-- hidden fields -->
+                                        <input value="<?php echo $entry->id_contact_entries; ?>" type="hidden" name="entry_id">
+                                        <?php // make sure the action is unique ?>
+                                        <?php $action = '89y4hf8vy78heuwnpoj290hg89hd' . $entry->id_contact_entries; ?>
+                                        <?php wp_nonce_field( $action, 'delete_entry'); ?>
+                                    </form>
+                                </td>
 							</tr>
 
 						<?php endforeach; ?>
@@ -149,6 +163,7 @@ class AdminSettingsPage {
 							<th>Enquiry</th>
 							<th>Date</th>
 							<th>Ref page</th>
+                            <th>Actions</th>
 						</tr>
 					</tfoot>
 				</table>
