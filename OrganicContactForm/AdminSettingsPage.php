@@ -230,7 +230,7 @@ class AdminSettingsPage {
 		    $page = $max_pages;
 
 		$offset = ($limit * $page) - $limit;
-		$query = sprintf( 'SELECT * FROM %s ORDER BY `id_contact_entries` ASC LIMIT %d OFFSET %d', $table, $limit, $offset);
+		$query = sprintf( 'SELECT * FROM %s ORDER BY `id_contact_entries` DESC LIMIT %d OFFSET %d', $table, $limit, $offset);
 
 		return $wpdb->get_results($query);
 

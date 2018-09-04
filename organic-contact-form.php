@@ -73,15 +73,17 @@ use OrganicContactForm\AdminDownloadEntries as AdminDownloadEntries;
 		add_action( 'wp_enqueue_scripts', 'ocf_load_plugin_scripts' );
 		function ocf_load_plugin_scripts() {
 
-			$plugin_url = forward_slash_it( plugin_dir_url( __FILE__ ) );
+			$plugin_url = fsi( plugin_dir_url( __FILE__ ) );
 
 			wp_enqueue_style( 'bootstrap', $plugin_url . 'node_modules/bootstrap/dist/css/bootstrap.min.css' );
 
 			wp_enqueue_style( 'ocf_styles', $plugin_url . 'style.css' );
 
+			wp_enqueue_script('parsleyjs' , $plugin_url . 'node_modules/parsleyjs/dist/parsley.js', array('jquery'), false, true );
+
 
 			// Localize plugin scripts
-			wp_register_script( 'ocf_scripts', $plugin_url . 'scripts.js', array('jquery'), false, true );
+			wp_register_script( 'ocf_scripts', $plugin_url . 'scripts.js', array('jquery', 'parsleyjs'), false, true );
 			$ajax_vars = array(
 				'adminurl' => admin_url('admin-ajax.php')
 			);
@@ -100,7 +102,7 @@ use OrganicContactForm\AdminDownloadEntries as AdminDownloadEntries;
 		add_action( 'admin_enqueue_scripts', 'ocf_load_plugin_admin_scripts' );
 		function ocf_load_plugin_admin_scripts() {
 
-			$plugin_url = forward_slash_it( plugin_dir_url( __FILE__ ) );
+			$plugin_url = fsi( plugin_dir_url( __FILE__ ) );
 			wp_enqueue_style('admin-styles', $plugin_url . 'admin.css');
 
 		}
@@ -265,7 +267,7 @@ endif;
 ////////////////
 /// Utility functions
 ////////////////
-	if ( !function_exists('forward_slash_it') ) :
+	if ( !function_exists( 'fsi' ) ) :
 
 		/**
 		 * Add a trailing slash on to the end of a string
@@ -273,7 +275,7 @@ endif;
 		 *
 		 * @return string;
 		 */
-		function forward_slash_it( $string ) {
+		function fsi( $string ) {
 			return  rtrim( $string, '/') . '/';
 		}
 

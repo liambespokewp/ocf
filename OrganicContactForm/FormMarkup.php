@@ -75,7 +75,7 @@ class FormMarkup {
 
 
 
-		<form method="post" class="ocf-form">
+		<form method="post" class="ocf-form" data-parsley-validate="">
 
 			<div class="container">
 
@@ -92,10 +92,10 @@ class FormMarkup {
                 <!-- start email field-->
 				<div class="row">
                     <div class="col-md-4">
-                        <label for="ocf_email_<?php echo $form_ID; ?>">Email <sup>(required)</sup><?php render_error_message('email', $form_ID); ?></label>
+                        <label for="ocf_email_<?php echo $form_ID; ?>" >Email <sup>(required)</sup><?php render_error_message('email', $form_ID); ?></label>
                     </div>
                     <div class="col-md-8">
-                        <input  name="ocf_email_<?php echo $form_ID; ?>" id="ocf_email_<?php echo $form_ID; ?>" type="email" required<?php $this->displayParsedValue('email', $form_ID);?>>
+                        <input  name="ocf_email_<?php echo $form_ID; ?>" id="ocf_email_<?php echo $form_ID; ?>" type="email" data-parsley-trigger="change" required="" type="email" required<?php $this->displayParsedValue('email', $form_ID);?>>
                     </div>
                 </div>
 
@@ -105,7 +105,7 @@ class FormMarkup {
                         <label for="ocf_tel_<?php echo $form_ID; ?>">Tel.<?php render_error_message('tel', $form_ID); ?></label>
                     </div>
                     <div class="col-md-8">
-                        <input name="ocf_tel_<?php echo $form_ID; ?>" id="ocf_tel_<?php echo $form_ID; ?>" type="tel"<?php $this->displayParsedValue('tel', $form_ID);?>>
+                        <input name="ocf_tel_<?php echo $form_ID; ?>" data-parsley-type="digits" data-parsley-trigger="change" id="ocf_tel_<?php echo $form_ID; ?>" type="tel"<?php $this->displayParsedValue('tel', $form_ID);?>>
                     </div>
                 </div>
 
@@ -167,6 +167,9 @@ class FormMarkup {
     }
 
     private function displayParsedValue( $field_type, $form_id ) {
+
+	    if ( !isset( $_SESSION['form_data'] ) )
+	        return;
 
 	    $message = '';
 
