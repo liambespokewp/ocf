@@ -13,5 +13,11 @@
     &:focus {
       background: $hover-red;
     }
+
+    &:disabled {
+      cursor: not-allowed;
+      background: #ff9994;
+      pointer-events: none;
+    }
   }
 }

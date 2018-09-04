@@ -27,12 +27,11 @@
 
                     if ( JSON.message === 'row_deleted' ) {
 
-                        $('#entry-table').find('tr[data-row-number=' + JSON.entry_id + ']').fadeOut(300, function() {
+                        $('#entry-table').find('tr[data-row-number=' + JSON.entry_id + ']').fadeOut(500, function() {
                             $(this).remove();
                         });
 
                     } else {
-
                         submitted_form.find('button').attr('disabled', false);
                     }
 
