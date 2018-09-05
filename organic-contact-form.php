@@ -194,76 +194,84 @@ use OrganicContactForm\AdminDownloadEntries as AdminDownloadEntries;
 ///////////////
 /// Settings pages
 ///////////////
-new AdminSettingsPage();
+	new AdminSettingsPage();
+
+
+///////////////
+/// Admin ajax functions
+///////////////
+	add_action('admin_init', function() {
+		new \OrganicContactForm\AdminAjax();
+	});
 
 ///////////////
 /// Widgets
 ///////////////
 
-if ( !function_exists('register_ocf_widget') ) :
+	if ( !function_exists('register_ocf_widget') ) :
 
-	/**
-	 * Create widget
-	 * @see OrganicContactForm\FormWidget
-	 */
-	add_action( 'widgets_init', 'register_ocf_widget' );
-	function register_ocf_widget() {
-		register_widget( 'OrganicContactForm\FormWidget' );
-	}
+		/**
+		 * Create widget
+		 * @see OrganicContactForm\FormWidget
+		 */
+		add_action( 'widgets_init', 'register_ocf_widget' );
+		function register_ocf_widget() {
+			register_widget( 'OrganicContactForm\FormWidget' );
+		}
 
-endif;
+	endif;
 
 ////////////////
 /// Activation
 ////////////////
 
-if ( !function_exists('ocf_create_database') ) :
+	if ( !function_exists('ocf_create_database') ) :
 
-	/**
-	 * Create the tables required for the plugin if they don't exist
-	 */
-	register_activation_hook( __FILE__, 'ocf_create_database' );
-	function ocf_create_database() {
+		/**
+		 * Create the tables required for the plugin if they don't exist
+		 */
+		register_activation_hook( __FILE__, 'ocf_create_database' );
+		function ocf_create_database() {
 
-		// grab to run the SQL queries
-		global $wpdb;
+			// grab to run the SQL queries
+			global $wpdb;
 
-		// prepare the queries array that needs to be looped to run all the queries individually
-		$queries = array();
+			// prepare the queries array that needs to be looped to run all the queries individually
+			$queries = array();
 
-		// make sure the right table will be used in the plugin initialisation
-		$queries[] = sprintf(
-			'USE %s;',
-			DB_NAME
-		);
+			// make sure the right table will be used in the plugin initialisation
+			$queries[] = sprintf(
+				'USE %s;',
+				DB_NAME
+			);
 
-		$table = OCF_TABLE_PREFIX . OCF_TABLE;
+			$table = OCF_TABLE_PREFIX . OCF_TABLE;
 
-		// Handles the core contact form data
-		$queries[] = sprintf('
-	                    CREATE TABLE IF NOT EXISTS `%s`.`%s`
-	                        (
-	                            `id_contact_entries` INT NOT NULL AUTO_INCREMENT,
-	                            `name` VARCHAR(100) NOT NULL,
-	                            `email` VARCHAR(50) NOT NULL,
-	                            `tel` VARCHAR(20),
-	                            `enquiry` TEXT NOT NULL,
-	                            `date` DATETIME NOT NULL,
-	                            `ref_page` TEXT NOT NULL,
-	                            PRIMARY KEY (`id_contact_entries`)
-	                        )
-	                    ENGINE = InnoDB CHARSET=utf8 COLLATE utf8_general_ci;',
-			DB_NAME,
-			$table
-		);
+			// Handles the core contact form data
+			$queries[] = sprintf('
+		                    CREATE TABLE IF NOT EXISTS `%s`.`%s`
+		                        (
+		                            `id_contact_entries` INT NOT NULL AUTO_INCREMENT,
+		                            `name` VARCHAR(100) NOT NULL,
+		                            `email` VARCHAR(50) NOT NULL,
+		                            `tel` VARCHAR(20),
+		                            `enquiry` TEXT NOT NULL,
+		                            `date` DATETIME NOT NULL,
+		                            `ref_page` TEXT NOT NULL,
+		                            PRIMARY KEY (`id_contact_entries`)
+		                        )
+		                    ENGINE = InnoDB CHARSET=utf8 COLLATE utf8_general_ci;',
+				DB_NAME,
+				$table
+			);
 
-		// Fire off each query, one by one
-		foreach ( $queries as $query )
-			$wpdb->query( $query );
+			// Fire off each query, one by one
+			foreach ( $queries as $query )
+				$wpdb->query( $query );
 
-	}
+		}
 
-endif;
+	endif;
 
 
 ////////////////
@@ -307,5 +315,3 @@ endif;
 		if ( isset( $_SESSION['form_data'] )  )
 			unset( $_SESSION['form_data'] );
 	});
-
-new \OrganicContactForm\AdminAjax();

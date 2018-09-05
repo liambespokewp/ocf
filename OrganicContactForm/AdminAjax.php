@@ -17,6 +17,9 @@ class AdminAjax {
 
 	}
 
+	/**
+	 * Validate the ajax request for deleting entries
+	 */
 	public function validateDeleteEntryRequest() {
 
 		$form_data = array();
@@ -59,6 +62,12 @@ class AdminAjax {
 
 	}
 
+	/**
+	 * Remove the entry from the database
+	 * @param $entry_id     ID that matches the id_contact_entries field in the entries  table
+	 *
+	 * @return false|int
+	 */
 	private function deleteEntry( $entry_id ) {
 
 		global $wpdb;
