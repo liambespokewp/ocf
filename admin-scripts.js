@@ -6,6 +6,9 @@
 
             e.preventDefault();
 
+            if ( !confirm("Are you sure you want to delete this entry?") )
+                return;
+
             var submitted_form = $(this);
 
             submitted_form.find('button').attr('disabled', true);
